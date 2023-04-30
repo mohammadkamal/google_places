@@ -1,0 +1,74 @@
+package com.google_places
+
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.libraries.places.api.model.LocalTime
+import com.google.android.libraries.places.api.model.OpeningHours
+import com.google.android.libraries.places.api.model.Period
+import com.google.android.libraries.places.api.model.PhotoMetadata
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.Place.BusinessStatus
+import com.google.android.libraries.places.api.model.PlusCode
+import com.google.android.libraries.places.api.model.TimeOfWeek
+
+fun Place.toJson(): Map<String, Any?> {
+    return mapOf("placeId" to id,
+            "name" to name,
+            "latLng" to latLng?.toJson(),
+            "address" to address,
+            "businessStatus" to businessStatus?.value,
+            "curbsidePickup" to curbsidePickup.toBool(),
+            "delivery" to delivery.toBool(),
+            "dineIn" to dineIn.toBool(),
+            "iconBackgroundColor" to iconBackgroundColor,
+            "iconURL" to iconUrl,
+            "openingHours" to openingHours?.toJson(),
+            "phoneNumber" to phoneNumber,
+            "photoMetadatas" to photoMetadatas?.map { photoMetadata -> photoMetadata.toJson() },
+            "plusCode" to plusCode?.toJson(),
+            "priceLevel" to priceLevel,
+            "rating" to rating,
+            "placeTypes" to types?.map { type -> type.name },
+            "userRatingTotal" to userRatingsTotal,
+            "utcOffsetMinutes" to utcOffsetMinutes,
+            "viewport" to viewport?.toJson(),
+            "websiteURI" to websiteUri?.toString(),
+            "isOpen" to isOpen)
+}
+
+fun LatLng.toJson(): Map<String, Any?> {
+    return mapOf("lat" to latitude, "lng" to longitude)
+}
+
+fun PhotoMetadata.toJson(): Map<String, Any?> {
+    return mapOf(
+            "attributions" to attributions,
+            "width" to width,
+            "height" to height
+    )
+}
+
+fun PlusCode.toJson() : Map<String, Any?>{
+    return mapOf("compoundCode" to compoundCode, "globalCode" to globalCode)
+}
+
+fun LatLngBounds.toJson() : Map<String, Any?>{
+    return mapOf("northeast" to northeast.toJson(), "southwest" to southwest.toJson())
+}
+
+fun OpeningHours.toJson() : Map<String, Any?>{
+    return mapOf("periods" to periods.map { period -> period.toJson() },
+    "weekdayText" to weekdayText)
+}
+
+fun Period.toJson() : Map<String, Any?> {
+    return mapOf("close" to close?.toJson(), "open" to open?.toJson())
+}
+
+fun TimeOfWeek.toJson() : Map<String, Any?> {
+    return mapOf("day" to day.ordinal, "time" to time.toJson())
+}
+
+fun LocalTime.toJson() : Map<String, Any?>{
+    return mapOf("hours" to hours, "minutes" to minutes)
+}
