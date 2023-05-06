@@ -42,11 +42,30 @@ public class GooglePlacesPlugin: NSObject, FlutterPlugin {
             result(FlutterError.init(code: ErrorCodes.missingParameter.rawValue, message: "Query parameter is missing", details: nil))
         }
         
+        let filter = GMSAutocompleteFilter()
+        let token = GMSAutocompleteSessionToken.init()
+
         let countryCodes = args?[Keys.countryCodes.rawValue]
         
-        let token = GMSAutocompleteSessionToken.init()
-        let filter = GMSAutocompleteFilter()
-        filter.types = []
+        let locationBiasDictionary = args?[Keys.locationBias.rawValue] as? Dictionary<String, Any?>
+        let biasNortheast = locationBiasDictionary == nil ? nil :  coordsFromJson(locationBiasDictionary!["northeast"] as! Dictionary<String, Any?>)
+        let biasSouthwest = locationBiasDictionary == nil ? nil :  coordsFromJson(locationBiasDictionary!["southwest"] as! Dictionary<String, Any?>)
+        
+        if(locationBiasDictionary != nil){
+            filter.locationBias = GMSPlaceRectangularLocationOption(biasNortheast!,biasSouthwest!)
+        }
+        
+        let locationRestrictionsDictionary = args?[Keys.locationRestriction.rawValue] as? Dictionary<String, Any?>
+        let restrictionNortheast = locationBiasDictionary == nil ? nil :  coordsFromJson(locationBiasDictionary!["northeast"] as! Dictionary<String, Any?>)
+        let restrictionSouthwest = locationBiasDictionary == nil ? nil :  coordsFromJson(locationBiasDictionary!["southwest"] as! Dictionary<String, Any?>)
+        
+        if(locationRestrictionsDictionary != nil){
+            filter.locationRestriction = GMSPlaceRectangularLocationOption(restrictionNortheast!, restrictionSouthwest!)
+        }
+        
+        let placeTypes = args?[Keys.placeTypes.rawValue] as? Array<String>
+        
+        filter.types = placeTypes ?? []
         filter.countries = countryCodes as? [String]
         
         placesClient?.findAutocompletePredictions(fromQuery: query as! String, filter: filter, sessionToken: token, callback:
@@ -87,7 +106,8 @@ enum Methods: String{
 }
 
 enum Keys: String {
-    case apiKey, query, countryCodes, placeId, placeFields, langCode
+    case apiKey, query, countryCodes, placeId, placeFields, langCode, locationBias,
+         locationRestriction, placeTypes
 }
 
 enum ErrorCodes: String{

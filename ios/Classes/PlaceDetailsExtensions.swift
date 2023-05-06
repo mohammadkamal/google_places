@@ -34,6 +34,10 @@ extension CLLocationCoordinate2D{
     }
 }
 
+func coordsFromJson(_ json: Dictionary<String, Any?>)-> CLLocationCoordinate2D{
+    return CLLocationCoordinate2D(latitude: json["lat"] as! CLLocationDegrees, longitude: json["lng"] as! CLLocationDegrees)
+}
+
 extension GMSPlacesBusinessStatus {
     var name: String {
         switch(self){
