@@ -2,14 +2,8 @@ package com.google_places
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.libraries.places.api.model.LocalTime
-import com.google.android.libraries.places.api.model.OpeningHours
-import com.google.android.libraries.places.api.model.Period
-import com.google.android.libraries.places.api.model.PhotoMetadata
-import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.*
 import com.google.android.libraries.places.api.model.Place.BusinessStatus
-import com.google.android.libraries.places.api.model.PlusCode
-import com.google.android.libraries.places.api.model.TimeOfWeek
 
 fun Place.toJson(): Map<String, Any?> {
     return mapOf("placeId" to id,
@@ -40,6 +34,10 @@ fun LatLng.toJson(): Map<String, Any?> {
     return mapOf("lat" to latitude, "lng" to longitude)
 }
 
+fun LatLngFromJson(json: Map<String, Any?>): LatLng {
+    return LatLng(json["lat"] as Double, json["lng"] as Double)
+}
+
 fun PhotoMetadata.toJson(): Map<String, Any?> {
     return mapOf(
             "attributions" to attributions,
@@ -54,6 +52,13 @@ fun PlusCode.toJson() : Map<String, Any?>{
 
 fun LatLngBounds.toJson() : Map<String, Any?>{
     return mapOf("northeast" to northeast.toJson(), "southwest" to southwest.toJson())
+}
+
+fun rectangularBoundsFromJson(json: Map<String, Any?>) : RectangularBounds {
+    return RectangularBounds.newInstance(
+            LatLngFromJson(json["northeast"] as Map<String, Any?>),
+            LatLngFromJson(json["southwest"] as Map<String, Any?>)
+    )
 }
 
 fun OpeningHours.toJson() : Map<String, Any?>{

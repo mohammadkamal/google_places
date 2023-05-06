@@ -14,6 +14,7 @@ part 'src/models/period.dart';
 part 'src/models/photo_metadata.dart';
 part 'src/models/place_details.dart';
 part 'src/models/plus_code.dart';
+part 'src/models/rectangular_bounds.dart';
 part 'src/models/time_of_week.dart';
 
 // Enums

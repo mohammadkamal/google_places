@@ -6,6 +6,7 @@ import com.google.android.libraries.places.api.Places.createClient
 import com.google.android.libraries.places.api.Places.initialize
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -66,8 +67,17 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
                         null)
 
         val countryCodes = call.argument<List<String>?>(Keys.CountryCodes.value)
+        val locationBiasMap = call.argument<Map<String, Any?>>(Keys.LocationBias.value)
+        var locationBias: RectangularBounds? = null
+        val locationRestrictionMap = call.argument<Map<String, Any?>>(Keys.LocationRestriction.value)
+        var locationRestriction: RectangularBounds? = null
+        val placeTypes = call.argument<List<String>?>(Keys.PlaceTypes.value)
 
-        val request = autoCompleteBuilder(query, countryCodes)
+        if (locationBiasMap != null) locationBias = rectangularBoundsFromJson(locationBiasMap)
+        if (locationRestrictionMap != null)
+            locationRestriction = rectangularBoundsFromJson(locationRestrictionMap)
+
+        val request = autoCompleteBuilder(query, countryCodes, locationBias, locationRestriction, placeTypes)
         placesClient.findAutocompletePredictions(request)
                 .addOnSuccessListener { task ->
                     result.success(task.autocompletePredictions.map { prediction -> prediction.toJson() })
@@ -78,12 +88,21 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
                 }
     }
 
-    private fun autoCompleteBuilder(query: String, countries: List<String>?): FindAutocompletePredictionsRequest {
+    private fun autoCompleteBuilder(query: String,
+                                    countries: List<String>? = null,
+                                    locationBias: RectangularBounds? = null,
+                                    locationRestriction: RectangularBounds? = null,
+                                    placeTypes: List<String>? = null)
+            : FindAutocompletePredictionsRequest {
         val token = AutocompleteSessionToken.newInstance()
 
         return FindAutocompletePredictionsRequest.builder()
-                .setCountries(countries
-                        ?: listOf<String>()).setSessionToken(token).setQuery(query).build()
+                .setCountries(countries ?: listOf<String>())
+                .setLocationBias(locationBias)
+                .setLocationRestriction(locationRestriction)
+                .setSessionToken(token)
+                .setQuery(query)
+                .build()
     }
 
     private fun onPlaceDetails(call: MethodCall, result: Result) {
@@ -116,7 +135,10 @@ enum class Keys(val value: String) {
     CountryCodes("countryCodes"),
     PlaceId("placeId"),
     PlaceFields("placeFields"),
-    LangCode("langCode")
+    LangCode("langCode"),
+    LocationBias("locationBias"),
+    LocationRestriction("locationRestriction"),
+    PlaceTypes("placeTypes")
 }
 
 enum class Methods(val value: String) {
@@ -125,7 +147,7 @@ enum class Methods(val value: String) {
     PlaceDetails("placeDetails"),
 }
 
-enum class ErrorCodes(val value: String){
+enum class ErrorCodes(val value: String) {
     Uninitialized("Uninitialized"),
     MissingParameter("Missing-Parameter"),
     AutoCompleteError("Auto-Complete-Error"),

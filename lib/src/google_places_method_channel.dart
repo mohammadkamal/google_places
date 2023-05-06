@@ -2,7 +2,17 @@ part of google_places;
 
 enum _Methods { initialize, autoComplete, placeDetails }
 
-enum _Args { apiKey, query, countryCodes, placeId, placeFields, langCode }
+enum _Args {
+  apiKey,
+  query,
+  countryCodes,
+  placeId,
+  placeFields,
+  langCode,
+  locationBias,
+  locationRestriction,
+  placeTypes
+}
 
 /// An implementation of [GooglePlacesPlatform] that uses method channels.
 class MethodChannelGooglePlaces extends GooglePlacesPlatform {
@@ -27,13 +37,23 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
   }
 
   @override
-  Future<List<AutocompletePrediction>> getAutoCompletePredictions(String query,
-      {List<String>? countryCodes}) async {
+  Future<List<AutocompletePrediction>> getAutoCompletePredictions(
+    String query, {
+    List<String>? countryCodes,
+    RectangularBounds? locationBias,
+    RectangularBounds? locationRestriction,
+    List<PlaceType>? placeTypes,
+  }) async {
     try {
       final result = await methodChannel.invokeListMethod(
           _Methods.autoComplete.name,
-          {_Args.query.name: query, _Args.countryCodes.name: countryCodes}
-            ..removeWhere((key, value) => value == null));
+          {
+            _Args.query.name: query,
+            _Args.countryCodes.name: countryCodes,
+            _Args.locationBias.name: locationBias?.toJson(),
+            _Args.locationRestriction.name: locationRestriction?.toJson(),
+            _Args.placeTypes.name: placeTypes?.map((t) => t.value).toList(),
+          }..removeWhere((key, value) => value == null));
 
       final temp = result?.map((e) => Map<String, dynamic>.from(e)).toList();
 
