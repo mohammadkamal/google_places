@@ -1,6 +1,6 @@
 part of google_places;
 
-enum _Methods { initialize, autoComplete, placeDetails }
+enum _Methods { initialize, updateLocale, autoComplete, placeDetails }
 
 enum _Args {
   apiKey,
@@ -29,6 +29,18 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
           _Methods.initialize.name,
           {_Args.apiKey.name: apiKey, _Args.langCode.name: locale?.languageCode}
             ..removeWhere((key, value) => value == null));
+    } on PlatformException catch (ex) {
+      return Future.error(ex);
+    } catch (ex) {
+      return Future.error(ex);
+    }
+  }
+
+  @override
+  Future<void> updateLocale(Locale locale) async {
+    try {
+      await methodChannel.invokeMethod(_Methods.updateLocale.name,
+          {_Args.langCode.name: locale.languageCode});
     } on PlatformException catch (ex) {
       return Future.error(ex);
     } catch (ex) {

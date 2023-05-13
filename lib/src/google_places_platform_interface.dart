@@ -25,6 +25,10 @@ abstract class GooglePlacesPlatform extends PlatformInterface {
     throw UnimplementedError('initialize() has not been implemented');
   }
 
+  Future<void> updateLocale(Locale locale) async {
+    throw UnimplementedError('updateLocale() has not been implemented');
+  }
+
   Future<List<AutocompletePrediction>> getAutoCompletePredictions(
     String query, {
     List<String>? countryCodes,

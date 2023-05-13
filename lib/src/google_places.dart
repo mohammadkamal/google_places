@@ -20,8 +20,7 @@ class GooglePlaces {
 
   Future<void> updateLocale(Locale locale) async {
     _locale = locale;
-    // TODO: Use native update locale
-    return GooglePlacesPlatform.instance.initialize(apiKey, locale: locale);
+    return GooglePlacesPlatform.instance.updateLocale(locale);
   }
 
   Future<List<AutocompletePrediction>> getAutoCompletePredictions(

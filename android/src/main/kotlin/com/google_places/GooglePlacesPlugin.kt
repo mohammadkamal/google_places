@@ -1,14 +1,13 @@
 package com.google_places
 
 import android.content.Context
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
 
 import com.google.android.libraries.places.api.Places.createClient
 import com.google.android.libraries.places.api.Places.initialize
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.RectangularBounds
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -24,6 +23,7 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
     private lateinit var placesClient: PlacesClient
+    private lateinit var apiKey: String
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "google_places")
@@ -35,6 +35,7 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             Methods.Initialize.value -> onInitialize(call, result)
+            Methods.UpdateLocale.value -> onUpdateLocale(call, result)
             Methods.AutoComplete.value -> onAutoComplete(call, result)
             Methods.PlaceDetails.value -> onPlaceDetails(call, result)
             else -> result.notImplemented()
@@ -46,7 +47,7 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun onInitialize(call: MethodCall, result: Result) {
-        val apiKey = call.argument<String>(Keys.ApiKey.value)
+        apiKey = call.argument<String>(Keys.ApiKey.value)
                 ?: return result.error(ErrorCodes.Uninitialized.value,
                         "Failed to initialize Google Places API",
                         null)
@@ -59,6 +60,17 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
         initialize(context, apiKey, locale)
         placesClient = createClient(context)
 
+        result.success(null)
+    }
+
+    private fun onUpdateLocale(call: MethodCall, result: Result) {
+        val langCode = call.argument<String?>(Keys.LangCode.value)
+
+        var locale: Locale? = null
+        if (langCode != null) locale = Locale(langCode)
+
+        initialize(context, apiKey, locale)
+        placesClient = createClient(context)
         result.success(null)
     }
 
@@ -132,6 +144,20 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
     private fun fetchPlaceBuilder(placeId: String, placeFields: List<Place.Field>?): FetchPlaceRequest {
         return FetchPlaceRequest.newInstance(placeId, placeFields ?: Place.Field.values().toList())
     }
+
+    private fun onPlacePhoto(call: MethodCall, result: Result){
+        val photoMetadataJson = call.argument<Map<String, Any?>>(Keys.PhotoMetadata.value)
+        val maxWidth = call.argument<Int?>(Keys.MaxWidth.value)
+        val maxHeight = call.argument<Int?>(Keys.MaxHeight.value)
+
+        val photoMetadata = photoMetadataFromJson(photoMetadataJson!!)
+
+        val request = FetchPhotoRequest.builder(photoMetadata).build()
+
+        placesClient.fetchPhoto(request).addOnSuccessListener { response ->
+            result.success(response.toString())
+        }
+    }
 }
 
 enum class Keys(val value: String) {
@@ -143,11 +169,15 @@ enum class Keys(val value: String) {
     LangCode("langCode"),
     LocationBias("locationBias"),
     LocationRestriction("locationRestriction"),
-    PlaceTypes("placeTypes")
+    PlaceTypes("placeTypes"),
+    PhotoMetadata("photoMetadata"),
+    MaxWidth("maxWidth"),
+    MaxHeight("maxHeight")
 }
 
 enum class Methods(val value: String) {
     Initialize("initialize"),
+    UpdateLocale("updateLocale"),
     AutoComplete("autoComplete"),
     PlaceDetails("placeDetails"),
 }

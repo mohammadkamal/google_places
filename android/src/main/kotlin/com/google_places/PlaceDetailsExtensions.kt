@@ -37,14 +37,6 @@ fun latLngFromJson(json: Map<String, Any?>): LatLng {
     return LatLng(json["lat"] as Double, json["lng"] as Double)
 }
 
-fun PhotoMetadata.toJson(): Map<String, Any?> {
-    return mapOf(
-            "attributions" to attributions,
-            "width" to width,
-            "height" to height
-    )
-}
-
 fun PlusCode.toJson() : Map<String, Any?>{
     return mapOf("compoundCode" to compoundCode, "globalCode" to globalCode)
 }
