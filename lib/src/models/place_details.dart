@@ -160,7 +160,8 @@ class PlaceDetails {
       placeTypes: json['placeTypes'] == null
           ? null
           : List<String>.from(json['placeTypes'])
-              .map((t) => PlaceType.values.firstWhere((e) => e.value == t))
+              .map((t) => PlaceType.values
+                  .firstWhere((e) => e.value == t.toLowerCase()))
               .toList(),
       userRatingTotal: json['userRatingTotal'],
       utcOffsetMinutes: json['utcOffsetMinutes'],

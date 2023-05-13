@@ -25,8 +25,13 @@ abstract class GooglePlacesPlatform extends PlatformInterface {
     throw UnimplementedError('initialize() has not been implemented');
   }
 
-  Future<List<AutocompletePrediction>> getAutoCompletePredictions(String query,
-      {List<String>? countryCodes}) async {
+  Future<List<AutocompletePrediction>> getAutoCompletePredictions(
+    String query, {
+    List<String>? countryCodes,
+    RectangularBounds? locationBias,
+    RectangularBounds? locationRestriction,
+    List<PlaceType>? placeTypes,
+  }) async {
     throw UnimplementedError(
         'getAutoCompletePredictions() has not been implemented');
   }

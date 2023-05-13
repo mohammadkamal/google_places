@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -37,71 +37,86 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: Center(
-            child: Column(
-              children: [
-                TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(),
-                  onSubmitted: (val) async {
-                    _googlePlacesPlugin
-                        .getAutoCompletePredictions(val, countryCodes: [
-                      'SA'
-                    ]).then((value) => setState(() {
-                              _predictions.clear();
-                              _predictions.addAll(value);
-                            }));
-                  },
-                ),
-                if (Platform.isIOS)
-                  ElevatedButton(
-                      onPressed: () async {
+      home: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Plugin example app')),
+            body: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: TextField(
+                      controller: _controller,
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                      onSubmitted: (val) async {
                         _googlePlacesPlugin
-                            .getAutoCompletePredictions(_controller.text,
-                                countryCodes: [
-                              'SA'
-                            ]).then((value) => setState(() {
+                            .getAutoCompletePredictions(val, countryCodes: [
+                          'SA'
+                        ]).then((value) => setState(() {
                                   _predictions.clear();
                                   _predictions.addAll(value);
                                 }));
                       },
-                      child: const Text("Submit")),
-                ..._predictions.map((e) => TextButton(
-                      child: Text('$e'),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => PlaceDialog(
-                                    placeId: e.placeId,
-                                    plugin: _googlePlacesPlugin)));
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        _googlePlacesPlugin.getAutoCompletePredictions(
+                            _controller.text,
+                            countryCodes: [
+                              'SA'
+                            ],
+                            placeTypes: [
+                              PlaceType.restaurant
+                            ]).then((value) => setState(() {
+                              _predictions.clear();
+                              _predictions.addAll(value);
+                            }));
                       },
-                    ))
-              ],
+                      child: const Text("Submit")),
+                  ..._predictions.map((e) => TextButton(
+                        child: Text('$e'),
+                        onPressed: () {
+                          navigateToPage(context,
+                              placeId: e.placeId, plugin: _googlePlacesPlugin);
+                        },
+                      ))
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
+    );
+  }
+
+  void navigateToPage(BuildContext context,
+      {required String placeId, required GooglePlaces plugin}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            PlaceDetailsPage(placeId: placeId, plugin: _googlePlacesPlugin),
+      ),
     );
   }
 }
 
-class PlaceDialog extends StatefulWidget {
+class PlaceDetailsPage extends StatefulWidget {
   final String placeId;
   final GooglePlaces plugin;
 
-  const PlaceDialog({super.key, required this.placeId, required this.plugin});
+  const PlaceDetailsPage(
+      {super.key, required this.placeId, required this.plugin});
 
   @override
-  State<StatefulWidget> createState() => _PlaceDialogState();
+  State<StatefulWidget> createState() => _PlaceDetailsPageState();
 }
 
-class _PlaceDialogState extends State<PlaceDialog> {
+class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
   PlaceDetails? details;
 
   @override
@@ -121,6 +136,7 @@ class _PlaceDialogState extends State<PlaceDialog> {
 
   @override
   Widget build(BuildContext context) {
+    log('$details');
     return Scaffold(appBar: AppBar(), body: Text('$details'));
   }
 }

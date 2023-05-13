@@ -1,6 +1,8 @@
 package com.google_places
 
 import android.content.Context
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
 
 import com.google.android.libraries.places.api.Places.createClient
 import com.google.android.libraries.places.api.Places.initialize
@@ -77,7 +79,8 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
         if (locationRestrictionMap != null)
             locationRestriction = rectangularBoundsFromJson(locationRestrictionMap)
 
-        val request = autoCompleteBuilder(query, countryCodes, locationBias, locationRestriction, placeTypes)
+        val request = autoCompleteBuilder(query, countryCodes, locationBias,
+                locationRestriction, placeTypes)
         placesClient.findAutocompletePredictions(request)
                 .addOnSuccessListener { task ->
                     result.success(task.autocompletePredictions.map { prediction -> prediction.toJson() })
@@ -95,14 +98,16 @@ class GooglePlacesPlugin : FlutterPlugin, MethodCallHandler {
                                     placeTypes: List<String>? = null)
             : FindAutocompletePredictionsRequest {
         val token = AutocompleteSessionToken.newInstance()
+        val builder = FindAutocompletePredictionsRequest.builder()
 
-        return FindAutocompletePredictionsRequest.builder()
-                .setCountries(countries ?: listOf<String>())
-                .setLocationBias(locationBias)
-                .setLocationRestriction(locationRestriction)
-                .setSessionToken(token)
-                .setQuery(query)
-                .build()
+        if(countries != null) builder.countries = countries
+        if(locationBias != null) builder.locationBias = locationBias
+        if(locationRestriction != null) builder.locationRestriction = locationRestriction
+        if(placeTypes != null) builder.typesFilter = placeTypes
+        builder.sessionToken = token
+        builder.query = query
+
+        return builder.build()
     }
 
     private fun onPlaceDetails(call: MethodCall, result: Result) {

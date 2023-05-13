@@ -13,4 +13,7 @@ class LocalTime {
 
   factory LocalTime.fromJson(Map<String, dynamic> json) =>
       LocalTime(hours: json['hours'], minutes: json['minutes']);
+
+  @override
+  String toString() => '$LocalTime(hours: $hours, minutes: $minutes)';
 }

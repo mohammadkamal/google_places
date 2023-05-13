@@ -3,7 +3,6 @@ package com.google_places
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.libraries.places.api.model.*
-import com.google.android.libraries.places.api.model.Place.BusinessStatus
 
 fun Place.toJson(): Map<String, Any?> {
     return mapOf("placeId" to id,
@@ -34,7 +33,7 @@ fun LatLng.toJson(): Map<String, Any?> {
     return mapOf("lat" to latitude, "lng" to longitude)
 }
 
-fun LatLngFromJson(json: Map<String, Any?>): LatLng {
+fun latLngFromJson(json: Map<String, Any?>): LatLng {
     return LatLng(json["lat"] as Double, json["lng"] as Double)
 }
 
@@ -56,8 +55,8 @@ fun LatLngBounds.toJson() : Map<String, Any?>{
 
 fun rectangularBoundsFromJson(json: Map<String, Any?>) : RectangularBounds {
     return RectangularBounds.newInstance(
-            LatLngFromJson(json["northeast"] as Map<String, Any?>),
-            LatLngFromJson(json["southwest"] as Map<String, Any?>)
+            latLngFromJson(json["northeast"] as Map<String, Any?>),
+            latLngFromJson(json["southwest"] as Map<String, Any?>)
     )
 }
 

@@ -1,14 +1,43 @@
 part of google_places;
 
 class GooglePlaces {
+  Locale? _locale;
+  late String _apiKey;
+  bool isInitialized = false;
+
+  Locale? get locale => _locale;
+  String get apiKey => _apiKey;
+
   Future<void> initialize(String apiKey, {Locale? locale}) async {
+    try {
+      _apiKey = apiKey;
+      _locale = locale ?? _locale;
+      return GooglePlacesPlatform.instance.initialize(apiKey, locale: locale);
+    } catch (ex) {
+      return Future.error(ex);
+    }
+  }
+
+  Future<void> updateLocale(Locale locale) async {
+    _locale = locale;
+    // TODO: Use native update locale
     return GooglePlacesPlatform.instance.initialize(apiKey, locale: locale);
   }
 
-  Future<List<AutocompletePrediction>> getAutoCompletePredictions(String query,
-      {List<String>? countryCodes}) async {
-    return GooglePlacesPlatform.instance
-        .getAutoCompletePredictions(query, countryCodes: countryCodes);
+  Future<List<AutocompletePrediction>> getAutoCompletePredictions(
+    String query, {
+    List<String>? countryCodes,
+    RectangularBounds? locationBias,
+    RectangularBounds? locationRestriction,
+    List<PlaceType>? placeTypes,
+  }) async {
+    return GooglePlacesPlatform.instance.getAutoCompletePredictions(
+      query,
+      countryCodes: countryCodes,
+      locationBias: locationBias,
+      locationRestriction: locationRestriction,
+      placeTypes: placeTypes,
+    );
   }
 
   Future<PlaceDetails> fetchPlaceDetails(String placeId,
