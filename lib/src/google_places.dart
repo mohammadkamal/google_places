@@ -7,13 +7,19 @@ class GooglePlaces {
 
   Locale? get locale => _locale;
   String get apiKey => _apiKey;
+  
+  static final _singleton = GooglePlaces._();
+  GooglePlaces._();
+  factory GooglePlaces() => _singleton;
 
   Future<void> initialize(String apiKey, {Locale? locale}) async {
     try {
       _apiKey = apiKey;
       _locale = locale ?? _locale;
+      isInitialized = true;
       return GooglePlacesPlatform.instance.initialize(apiKey, locale: locale);
     } catch (ex) {
+      isInitialized = false;
       return Future.error(ex);
     }
   }
