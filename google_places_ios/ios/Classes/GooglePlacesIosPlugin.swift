@@ -2,8 +2,8 @@ import Flutter
 import UIKit
 import GooglePlaces
 
-public class GooglePlacesPlugin: NSObject, FlutterPlugin {
-    private var placesClient: GMSPlacesClient?
+public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
+  private var placesClient: GMSPlacesClient?
     
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "google_places", binaryMessenger: registrar.messenger())

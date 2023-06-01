@@ -11,6 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
+  google_places_ios:
+    git:
+      url: https://github.com/mohammadkamal/google_places
+      path: google_places_ios/
 
 dev_dependencies:
   flutter_test:
@@ -38,7 +42,7 @@ flutter:
         package: com.google_places
         pluginClass: GooglePlacesPlugin
       ios:
-        pluginClass: GooglePlacesPlugin
+        default_package: google_places_ios
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
