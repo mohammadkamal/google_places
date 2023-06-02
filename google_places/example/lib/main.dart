@@ -27,11 +27,11 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     await _googlePlacesPlugin.initialize(
-        const String.fromEnvironment("MAPS_KEY"),
-        locale: const Locale('fr'));
+      const String.fromEnvironment("MAPS_KEY"),
+      locale: const Locale('ar'),
+    );
   }
 
   @override
@@ -52,13 +52,13 @@ class _MyAppState extends State<MyApp> {
                       decoration:
                           const InputDecoration(border: OutlineInputBorder()),
                       onSubmitted: (val) async {
-                        _googlePlacesPlugin
-                            .getAutoCompletePredictions(val, countryCodes: [
-                          'SA'
-                        ]).then((value) => setState(() {
-                                  _predictions.clear();
-                                  _predictions.addAll(value);
-                                }));
+                        _googlePlacesPlugin.getAutoCompletePredictions(val,
+                            countryCodes: ['SA']).then(
+                          (value) => setState(() {
+                            _predictions.clear();
+                            _predictions.addAll(value);
+                          }),
+                        );
                       },
                     ),
                   ),
@@ -77,13 +77,15 @@ class _MyAppState extends State<MyApp> {
                             }));
                       },
                       child: const Text("Submit")),
-                  ..._predictions.map((e) => TextButton(
-                        child: Text('$e'),
-                        onPressed: () {
-                          navigateToPage(context,
-                              placeId: e.placeId, plugin: _googlePlacesPlugin);
-                        },
-                      ))
+                  ..._predictions.map(
+                    (e) => TextButton(
+                      child: Text('$e'),
+                      onPressed: () {
+                        navigateToPage(context,
+                            placeId: e.placeId, plugin: _googlePlacesPlugin);
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
@@ -127,11 +129,11 @@ class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    widget.plugin
-        .fetchPlaceDetails(widget.placeId)
-        .then((value) => setState(() {
-              details = value;
-            }));
+    widget.plugin.fetchPlaceDetails(widget.placeId).then(
+          (value) => setState(() {
+            details = value;
+          }),
+        );
   }
 
   @override

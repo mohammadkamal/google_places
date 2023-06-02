@@ -82,6 +82,15 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  google_places_android:
+    dependency: transitive
+    description:
+      path: google_places_android
+      ref: HEAD
+      resolved-ref: "2cbadaf73e138496ccec34ec02c770ffc1f79420"
+      url: "https://github.com/mohammadkamal/google_places"
+    source: git
+    version: "0.0.1"
   google_places_ios:
     dependency: transitive
     description:

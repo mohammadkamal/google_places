@@ -43,8 +43,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.google_places_android
-        pluginClass: GooglePlacesAndroidPlugin
+        default_package: google_places_android
       ios:
         default_package: google_places_ios
 
