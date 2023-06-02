@@ -82,6 +82,15 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  google_places_ios:
+    dependency: transitive
+    description:
+      path: google_places_ios
+      ref: HEAD
+      resolved-ref: "0d99c64f76c5333e2c7a32c62f8a96c31c9e12bc"
+      url: "https://github.com/mohammadkamal/google_places"
+    source: git
+    version: "0.0.1"
   js:
     dependency: transitive
     description:
@@ -200,5 +209,5 @@ packages:
     source: hosted
     version: "2.1.4"
 sdks:
-  dart: ">=3.0.0-0 <4.0.0"
-  flutter: ">=2.5.0"
+  dart: ">=3.0.2 <4.0.0"
+  flutter: ">=3.3.0"

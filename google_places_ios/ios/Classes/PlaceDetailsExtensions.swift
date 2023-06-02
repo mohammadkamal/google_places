@@ -7,9 +7,10 @@ extension GMSPlace{
                 "latLng": coordinate.toJson(),
                 "address":formattedAddress,
                 "businessStatus": businessStatus.name,
-                "curbsidePickup": curbsidePickup.value,
-                "delivery": delivery.value,
-                "dineIn": dineIn.value,
+                // Not available for iOS 11
+                // "curbsidePickup": curbsidePickup.value,
+                // "delivery": delivery.value,
+                // "dineIn": dineIn.value,
                 "iconBackgroundColor": iconBackgroundColor?.rgb(),
                 "iconURL": iconImageURL?.absoluteString,
                 "openingHours": openingHours?.toJson(),
@@ -50,7 +51,8 @@ extension GMSPlacesBusinessStatus {
     }
 }
 
-extension GMSBooleanPlaceAttribute{
+// Not available for iOS 11
+/*extension GMSBooleanPlaceAttribute{
     var value: Bool? {
         switch(self){
         case GMSBooleanPlaceAttribute.false: return false
@@ -59,7 +61,7 @@ extension GMSBooleanPlaceAttribute{
         default: return nil
         }
     }
-}
+}*/
 
 extension GMSOpeningHours {
     func toJson() -> Dictionary<String, Any?> {
