@@ -4,7 +4,7 @@ class PhotoMetadata {
   final String attributions;
   final int width;
   final int height;
-  final String ref;
+  final String? ref;
 
   PhotoMetadata({
     required this.attributions,

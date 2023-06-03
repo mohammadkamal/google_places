@@ -62,7 +62,7 @@ fun Period.toJson() : Map<String, Any?> {
 }
 
 fun TimeOfWeek.toJson() : Map<String, Any?> {
-    return mapOf("day" to day.ordinal, "time" to time.toJson())
+    return mapOf("day" to day.ordinal + 1, "time" to time.toJson())
 }
 
 fun LocalTime.toJson() : Map<String, Any?>{

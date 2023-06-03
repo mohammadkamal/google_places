@@ -7,7 +7,7 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
     
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "google_places", binaryMessenger: registrar.messenger())
-    let instance = GooglePlacesPlugin()
+    let instance = GooglePlacesIosPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
@@ -22,13 +22,13 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
     
     private func onInitialize(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         let args = call.arguments as? Dictionary<String, Any?>
-        let apiKey = args?[Keys.apiKey.rawValue]
+        let apiKey = args?[Keys.apiKey.rawValue] as? String
         
         if(apiKey == nil){
             result(FlutterError.init(code: ErrorCodes.uninitialized.rawValue, message: "Failed to initialize Google Places API", details: nil))
         }
         
-        GMSPlacesClient.provideAPIKey(apiKey as! String)
+        GMSPlacesClient.provideAPIKey(apiKey!)
         placesClient = GMSPlacesClient.shared()
         
         result(nil)
@@ -65,7 +65,8 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
         
         let placeTypes = args?[Keys.placeTypes.rawValue] as? Array<String>
         
-        filter.types = placeTypes ?? []
+        // Not supported in iOS 11
+        // filter.types = placeTypes ?? []
         filter.countries = countryCodes as? [String]
         
         placesClient?.findAutocompletePredictions(fromQuery: query as! String, filter: filter, sessionToken: token, callback:
@@ -99,20 +100,26 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
             }
         })
     }
+    
+    private func onPlacePhoto(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+        let args = call.arguments as? Dictionary<String, Any?>
+        
+    }
 }
 
 enum Methods: String{
-    case initialize, autoComplete, placeDetails
+    case initialize, autoComplete, placeDetails, placePhoto
 }
 
 enum Keys: String {
     case apiKey, query, countryCodes, placeId, placeFields, langCode, locationBias,
-         locationRestriction, placeTypes
+         locationRestriction, placeTypes, photoMetadata,maxWidth,maxHeight
 }
 
 enum ErrorCodes: String{
     case uninitialized = "Uninitialized",
     missingParameter = "Missing-Parameter",
     autoCompleteError = "Auto-Complete-Error",
-    placeDetailsError = "Place-Details-Error"
+    placeDetailsError = "Place-Details-Error",
+    placePhotoError = "Place-Photo-Error"
 }
