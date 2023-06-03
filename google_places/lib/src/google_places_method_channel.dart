@@ -1,6 +1,12 @@
 part of google_places;
 
-enum _Methods { initialize, updateLocale, autoComplete, placeDetails }
+enum _Methods {
+  initialize,
+  updateLocale,
+  autoComplete,
+  placeDetails,
+  placePhoto
+}
 
 enum _Args {
   apiKey,
@@ -11,7 +17,10 @@ enum _Args {
   langCode,
   locationBias,
   locationRestriction,
-  placeTypes
+  placeTypes,
+  photoMetadata,
+  maxWidth,
+  maxHeight
 }
 
 /// An implementation of [GooglePlacesPlatform] that uses method channels.
@@ -89,6 +98,26 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
           }..removeWhere((key, value) => value == null)));
 
       return PlaceDetails.fromJson(place);
+    } on PlatformException catch (ex) {
+      return Future.error(ex);
+    } catch (ex) {
+      return Future.error(ex);
+    }
+  }
+
+  @override
+  Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
+      {int? maxWidth, int? maxHeight}) async {
+    try {
+      final photo = await methodChannel.invokeMethod<Uint8List>(
+          _Methods.placePhoto.name,
+          {
+            _Args.photoMetadata.name: metadata.toJson(),
+            _Args.maxWidth.name: maxWidth,
+            _Args.maxHeight.name: maxHeight,
+          }..removeWhere((key, value) => value == null));
+
+      return photo!;
     } on PlatformException catch (ex) {
       return Future.error(ex);
     } catch (ex) {

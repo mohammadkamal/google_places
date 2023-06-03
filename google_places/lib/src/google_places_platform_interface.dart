@@ -44,4 +44,9 @@ abstract class GooglePlacesPlatform extends PlatformInterface {
       {List<PlaceField>? placeFields}) async {
     throw UnimplementedError('fetchPlaceDetails() has not been implemented');
   }
+
+  Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
+      {int? maxWidth, int? maxHeight}) async {
+    throw UnimplementedError('fetchPlacePhoto() has not been implemented');
+  }
 }

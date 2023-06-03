@@ -7,7 +7,7 @@ class GooglePlaces {
 
   Locale? get locale => _locale;
   String get apiKey => _apiKey;
-  
+
   static final _singleton = GooglePlaces._();
   GooglePlaces._();
   factory GooglePlaces() => _singleton;
@@ -49,5 +49,11 @@ class GooglePlaces {
       {List<PlaceField>? placeFields}) async {
     return GooglePlacesPlatform.instance
         .fetchPlaceDetails(placeId, placeFields: placeFields);
+  }
+
+  Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
+      {int? maxWidth, int? maxHeight}) async {
+    return GooglePlacesPlatform.instance
+        .fetchPlacePhoto(metadata, maxWidth: maxWidth, maxHeight: maxHeight);
   }
 }

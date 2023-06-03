@@ -38,6 +38,7 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
             Methods.UpdateLocale.value -> onUpdateLocale(call, result)
             Methods.AutoComplete.value -> onAutoComplete(call, result)
             Methods.PlaceDetails.value -> onPlaceDetails(call, result)
+            Methods.PlacePhoto.value -> onPlacePhoto(call, result)
             else -> result.notImplemented()
         }
     }
@@ -152,10 +153,15 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
 
         val photoMetadata = photoMetadataFromJson(photoMetadataJson!!)
 
-        val request = FetchPhotoRequest.builder(photoMetadata).build()
+        val request = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(maxWidth)
+                .setMaxHeight(maxHeight).build()
 
         placesClient.fetchPhoto(request).addOnSuccessListener { response ->
-            result.success(response.toString())
+            result.success(response.bitmap.toByteArray())
+        }.addOnFailureListener { exception ->
+            result.error(ErrorCodes.PlacePhotoError.value,
+                    exception.localizedMessage,
+                    null)
         }
     }
 }
@@ -180,11 +186,13 @@ enum class Methods(val value: String) {
     UpdateLocale("updateLocale"),
     AutoComplete("autoComplete"),
     PlaceDetails("placeDetails"),
+    PlacePhoto("placePhoto"),
 }
 
 enum class ErrorCodes(val value: String) {
     Uninitialized("Uninitialized"),
     MissingParameter("Missing-Parameter"),
     AutoCompleteError("Auto-Complete-Error"),
-    PlaceDetailsError("Place-Details-Error")
+    PlaceDetailsError("Place-Details-Error"),
+    PlacePhotoError("Place-Photo-Error"),
 }
