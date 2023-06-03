@@ -12,6 +12,11 @@ class GooglePlaces {
   GooglePlaces._();
   factory GooglePlaces() => _singleton;
 
+  /// Initialize your plugin.
+  /// 
+  /// You can pass [locale] to apply it to auto complete results and place details.
+  /// Passing [locale] is supported on Android only.
+  /// On iOS, result will return with the device's language.
   Future<void> initialize(String apiKey, {Locale? locale}) async {
     try {
       _apiKey = apiKey;
@@ -24,11 +29,26 @@ class GooglePlaces {
     }
   }
 
+  /// Update your locale.
+  /// 
+  /// This feature is supported on Android only.
   Future<void> updateLocale(Locale locale) async {
     _locale = locale;
     return GooglePlacesPlatform.instance.updateLocale(locale);
   }
 
+  /// Get auto complete predictions.
+  /// 
+  /// You can restrict your auto complete predictions by passing the following parameters:
+  /// 
+  /// [countryCodes] is a list of codes that follows ISO 3166-1 Alpha-2.
+  /// For example: 'EG', 'SA', etc.
+  /// 
+  /// You can pass [locationBias] as a refenece for your predictions.
+  /// 
+  /// You can pass [locationRestriction] to restrict your predictions search.
+  /// 
+  /// You can pass [placeTypes] to restrict the types returned by the function.
   Future<List<AutocompletePrediction>> getAutoCompletePredictions(
     String query, {
     List<String>? countryCodes,
@@ -45,12 +65,20 @@ class GooglePlaces {
     );
   }
 
+  /// Get the place details.
+  /// 
+  /// Pass [placeFields] to restrict the fields returned in [PlaceDetails].
   Future<PlaceDetails> fetchPlaceDetails(String placeId,
       {List<PlaceField>? placeFields}) async {
     return GooglePlacesPlatform.instance
         .fetchPlaceDetails(placeId, placeFields: placeFields);
   }
 
+  /// Get a photo by metadata.
+  /// 
+  /// Pass [maxWidth] and [maxHeight] to control the resolution of the returned photo.
+  /// 
+  /// Returns [Uint8List] and can be used in [Image.memory].
   Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
       {int? maxWidth, int? maxHeight}) async {
     return GooglePlacesPlatform.instance
