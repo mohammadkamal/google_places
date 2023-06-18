@@ -1,6 +1,8 @@
 package com.google_places_android
 
 import android.content.Context
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
 
 import com.google.android.libraries.places.api.Places.createClient
 import com.google.android.libraries.places.api.Places.initialize
@@ -20,10 +22,12 @@ import io.flutter.plugin.common.MethodChannel.Result
 import java.util.*
 
 class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
-  private lateinit var channel: MethodChannel
+    private lateinit var channel: MethodChannel
     private lateinit var context: Context
     private lateinit var placesClient: PlacesClient
     private lateinit var apiKey: String
+
+    private var cancelTokens = mapOf<Long, CancellationTokenSource>()
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "google_places")
@@ -39,6 +43,7 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
             Methods.AutoComplete.value -> onAutoComplete(call, result)
             Methods.PlaceDetails.value -> onPlaceDetails(call, result)
             Methods.PlacePhoto.value -> onPlacePhoto(call, result)
+            Methods.CancelRequest.value -> onCancelRequest(call, result)
             else -> result.notImplemented()
         }
     }
@@ -48,67 +53,85 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
     }
 
     private fun onInitialize(call: MethodCall, result: Result) {
-        apiKey = call.argument<String>(Keys.ApiKey.value)
-                ?: return result.error(ErrorCodes.Uninitialized.value,
-                        "Failed to initialize Google Places API",
-                        null)
+        try{
+            apiKey = call.argument<String>(Keys.ApiKey.value)
+                    ?: return result.error(ErrorCodes.Uninitialized.value,
+                            "Failed to initialize Google Places API",
+                            null)
 
-        val langCode = call.argument<String?>(Keys.LangCode.value)
-        var locale: Locale? = null
+            val langCode = call.argument<String?>(Keys.LangCode.value)
+            var locale: Locale? = null
 
-        if (langCode != null) locale = Locale(langCode)
+            if (langCode != null) locale = Locale(langCode)
 
-        initialize(context, apiKey, locale)
-        placesClient = createClient(context)
+            initialize(context, apiKey, locale)
+            placesClient = createClient(context)
 
-        result.success(null)
+            result.success(null)
+        } catch (ex: Exception){
+            result.error(ErrorCodes.Uninitialized.value, ex.localizedMessage, null)
+        }
     }
 
     private fun onUpdateLocale(call: MethodCall, result: Result) {
-        val langCode = call.argument<String?>(Keys.LangCode.value)
+        try{
+            val langCode = call.argument<String?>(Keys.LangCode.value)
 
-        var locale: Locale? = null
-        if (langCode != null) locale = Locale(langCode)
+            var locale: Locale? = null
+            if (langCode != null) locale = Locale(langCode)
 
-        initialize(context, apiKey, locale)
-        placesClient = createClient(context)
-        result.success(null)
+            initialize(context, apiKey, locale)
+            placesClient = createClient(context)
+            result.success(null)
+        } catch (ex: Exception){
+            result.error(ErrorCodes.UpdateLocaleError.value, ex.localizedMessage, null)
+        }
     }
 
     private fun onAutoComplete(call: MethodCall, result: Result) {
-        val query = call.argument<String>(Keys.Query.value)
-                ?: return result.error(ErrorCodes.MissingParameter.value,
-                        "Query parameter is missing",
-                        null)
-
-        val countryCodes = call.argument<List<String>?>(Keys.CountryCodes.value)
-        val locationBiasMap = call.argument<Map<String, Any?>>(Keys.LocationBias.value)
-        var locationBias: RectangularBounds? = null
-        val locationRestrictionMap = call.argument<Map<String, Any?>>(Keys.LocationRestriction.value)
-        var locationRestriction: RectangularBounds? = null
-        val placeTypes = call.argument<List<String>?>(Keys.PlaceTypes.value)
-
-        if (locationBiasMap != null) locationBias = rectangularBoundsFromJson(locationBiasMap)
-        if (locationRestrictionMap != null)
-            locationRestriction = rectangularBoundsFromJson(locationRestrictionMap)
-
-        val request = autoCompleteBuilder(query, countryCodes, locationBias,
-                locationRestriction, placeTypes)
-        placesClient.findAutocompletePredictions(request)
-                .addOnSuccessListener { task ->
-                    result.success(task.autocompletePredictions.map { prediction -> prediction.toJson() })
-                }.addOnFailureListener { exception ->
-                    result.error(ErrorCodes.AutoCompleteError.value,
-                            exception.localizedMessage,
+        try{
+            val query = call.argument<String>(Keys.Query.value)
+                    ?: return result.error(ErrorCodes.MissingParameter.value,
+                            "Query parameter is missing",
                             null)
-                }
+
+            val countryCodes = call.argument<List<String>?>(Keys.CountryCodes.value)
+            val locationBiasMap = call.argument<Map<String, Any?>>(Keys.LocationBias.value)
+            var locationBias: RectangularBounds? = null
+            val locationRestrictionMap = call.argument<Map<String, Any?>>(Keys.LocationRestriction.value)
+            var locationRestriction: RectangularBounds? = null
+            val placeTypes = call.argument<List<String>?>(Keys.PlaceTypes.value)
+            val cancelTokenCode = call.argument<Long?>(Keys.CancelToken.value)
+
+            if (locationBiasMap != null) locationBias = rectangularBoundsFromJson(locationBiasMap)
+            if (locationRestrictionMap != null)
+                locationRestriction = rectangularBoundsFromJson(locationRestrictionMap)
+            if(cancelTokenCode != null){
+                val token = CancellationTokenSource()
+                cancelTokens.plus(Pair(cancelTokenCode, token))
+            }
+
+            val request = autoCompleteBuilder(query, countryCodes, locationBias,
+                    locationRestriction, placeTypes, cancelTokens[cancelTokenCode])
+            placesClient.findAutocompletePredictions(request)
+                    .addOnSuccessListener { task ->
+                        result.success(task.autocompletePredictions.map { prediction -> prediction.toJson() })
+                    }.addOnFailureListener { exception ->
+                        result.error(ErrorCodes.AutoCompleteError.value,
+                                exception.localizedMessage,
+                                null)
+                    }
+        } catch (ex: Exception){
+            result.error(ErrorCodes.AutoCompleteError.value, ex.localizedMessage, null)
+        }
     }
 
     private fun autoCompleteBuilder(query: String,
                                     countries: List<String>? = null,
                                     locationBias: RectangularBounds? = null,
                                     locationRestriction: RectangularBounds? = null,
-                                    placeTypes: List<String>? = null)
+                                    placeTypes: List<String>? = null,
+    cancellationToken: CancellationTokenSource? = null)
             : FindAutocompletePredictionsRequest {
         val token = AutocompleteSessionToken.newInstance()
         val builder = FindAutocompletePredictionsRequest.builder()
@@ -117,6 +140,7 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
         if(locationBias != null) builder.locationBias = locationBias
         if(locationRestriction != null) builder.locationRestriction = locationRestriction
         if(placeTypes != null) builder.typesFilter = placeTypes
+        if(cancellationToken != null) builder.cancellationToken = cancellationToken.token
         builder.sessionToken = token
         builder.query = query
 
@@ -124,22 +148,26 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
     }
 
     private fun onPlaceDetails(call: MethodCall, result: Result) {
-        val placeId = call.argument<String>(Keys.PlaceId.value)
-                ?: return result.error(ErrorCodes.MissingParameter.value,
-                        "PlaceId parameter is missing",
-                        null)
-
-        val placeFields = call.argument<List<String>?>(Keys.PlaceFields.value)
-
-        placesClient.fetchPlace(fetchPlaceBuilder(placeId,
-                placeFields?.map { field -> Place.Field.valueOf(field) }))
-                .addOnSuccessListener { response ->
-                    result.success(response.place.toJson())
-                }.addOnFailureListener { exception ->
-                    result.error(ErrorCodes.PlaceDetailsError.value,
-                            exception.localizedMessage,
+        try{
+            val placeId = call.argument<String>(Keys.PlaceId.value)
+                    ?: return result.error(ErrorCodes.MissingParameter.value,
+                            "PlaceId parameter is missing",
                             null)
-                }
+
+            val placeFields = call.argument<List<String>?>(Keys.PlaceFields.value)
+
+            placesClient.fetchPlace(fetchPlaceBuilder(placeId,
+                    placeFields?.map { field -> Place.Field.valueOf(field) }))
+                    .addOnSuccessListener { response ->
+                        result.success(response.place.toJson())
+                    }.addOnFailureListener { exception ->
+                        result.error(ErrorCodes.PlaceDetailsError.value,
+                                exception.localizedMessage,
+                                null)
+                    }
+        } catch (ex: Exception){
+            result.error(ErrorCodes.PlaceDetailsError.value, ex.localizedMessage, null)
+        }
     }
 
     private fun fetchPlaceBuilder(placeId: String, placeFields: List<Place.Field>?): FetchPlaceRequest {
@@ -147,21 +175,38 @@ class GooglePlacesAndroidPlugin: FlutterPlugin, MethodCallHandler {
     }
 
     private fun onPlacePhoto(call: MethodCall, result: Result){
-        val photoMetadataJson = call.argument<Map<String, Any?>>(Keys.PhotoMetadata.value)
-        val maxWidth = call.argument<Int?>(Keys.MaxWidth.value)
-        val maxHeight = call.argument<Int?>(Keys.MaxHeight.value)
+        try{
+            val photoMetadataJson = call.argument<Map<String, Any?>>(Keys.PhotoMetadata.value)
+            val maxWidth = call.argument<Int?>(Keys.MaxWidth.value)
+            val maxHeight = call.argument<Int?>(Keys.MaxHeight.value)
 
-        val photoMetadata = photoMetadataFromJson(photoMetadataJson!!)
+            val photoMetadata = photoMetadataFromJson(photoMetadataJson!!)
 
-        val request = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(maxWidth)
-                .setMaxHeight(maxHeight).build()
+            val request = FetchPhotoRequest.builder(photoMetadata).setMaxHeight(maxWidth)
+                    .setMaxHeight(maxHeight).build()
 
-        placesClient.fetchPhoto(request).addOnSuccessListener { response ->
-            result.success(response.bitmap.toByteArray())
-        }.addOnFailureListener { exception ->
-            result.error(ErrorCodes.PlacePhotoError.value,
-                    exception.localizedMessage,
-                    null)
+            placesClient.fetchPhoto(request).addOnSuccessListener { response ->
+                result.success(response.bitmap.toByteArray())
+            }.addOnFailureListener { exception ->
+                result.error(ErrorCodes.PlacePhotoError.value,
+                        exception.localizedMessage,
+                        null)
+            }
+        } catch (ex: Exception){
+            result.error(ErrorCodes.PlacePhotoError.value, ex.localizedMessage, null)
+        }
+    }
+
+    private fun onCancelRequest(call: MethodCall, result: Result) {
+        val tokenCode = call.argument<Long>(Keys.CancelToken.value)
+                ?: return result.error(ErrorCodes.MissingParameter.value,
+                "CancelToken code is missing",null)
+
+        try{
+            cancelTokens[tokenCode]?.cancel()
+            result.success(null)
+        } catch (ex: Exception){
+            result.error(ErrorCodes.CancelRequestError.value,ex.localizedMessage,null)
         }
     }
 }
@@ -178,7 +223,8 @@ enum class Keys(val value: String) {
     PlaceTypes("placeTypes"),
     PhotoMetadata("photoMetadata"),
     MaxWidth("maxWidth"),
-    MaxHeight("maxHeight")
+    MaxHeight("maxHeight"),
+    CancelToken("cancelToken")
 }
 
 enum class Methods(val value: String) {
@@ -187,6 +233,7 @@ enum class Methods(val value: String) {
     AutoComplete("autoComplete"),
     PlaceDetails("placeDetails"),
     PlacePhoto("placePhoto"),
+    CancelRequest("cancelRequest")
 }
 
 enum class ErrorCodes(val value: String) {
@@ -195,4 +242,6 @@ enum class ErrorCodes(val value: String) {
     AutoCompleteError("Auto-Complete-Error"),
     PlaceDetailsError("Place-Details-Error"),
     PlacePhotoError("Place-Photo-Error"),
+    UpdateLocaleError("Update-Locale-Error"),
+    CancelRequestError("Cancel-Request-Error")
 }
