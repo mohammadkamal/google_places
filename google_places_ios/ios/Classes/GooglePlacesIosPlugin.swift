@@ -3,22 +3,24 @@ import UIKit
 import GooglePlaces
 
 public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
-  private var placesClient: GMSPlacesClient?
+    private var placesClient: GMSPlacesClient?
+    private var photoMetadatas: Array<GMSPlacePhotoMetadata>?
     
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "google_places", binaryMessenger: registrar.messenger())
-    let instance = GooglePlacesIosPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-      switch call.method{
-      case Methods.initialize.rawValue: onInitialize(call, result: result)
-      case Methods.autoComplete.rawValue: onAutoComplete(call, result: result)
-      case Methods.placeDetails.rawValue: onPlaceDetails(call, result:result)
-      default: result(FlutterMethodNotImplemented)
-      }
-  }
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "google_places", binaryMessenger: registrar.messenger())
+        let instance = GooglePlacesIosPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method{
+        case Methods.initialize.rawValue: onInitialize(call, result: result)
+        case Methods.autoComplete.rawValue: onAutoComplete(call, result: result)
+        case Methods.placeDetails.rawValue: onPlaceDetails(call, result:result)
+        case Methods.placePhoto.rawValue: onPlacePhoto(call, result: result)
+        default: result(FlutterMethodNotImplemented)
+        }
+    }
     
     private func onInitialize(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         let args = call.arguments as? Dictionary<String, Any?>
@@ -44,7 +46,7 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
         
         let filter = GMSAutocompleteFilter()
         let token = GMSAutocompleteSessionToken.init()
-
+        
         let countryCodes = args?[Keys.countryCodes.rawValue]
         
         let locationBiasDictionary = args?[Keys.locationBias.rawValue] as? Dictionary<String, Any?>
@@ -90,12 +92,31 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
             result(FlutterError.init(code: ErrorCodes.missingParameter.rawValue, message: "PlaceId parameter is missing", details: nil))
         }
         
-        placesClient?.fetchPlace(fromPlaceID: placeId as! String, placeFields: GMSPlaceField.all, sessionToken: nil, callback: {
+        let placeFieldsStringArray = (args?[Keys.placeFields.rawValue] as? Array<String>)
+        var placeFields: GMSPlaceField?
+        
+        if(placeFieldsStringArray != nil){
+            for field in placeFieldsStringArray!{
+                if(placeFields == nil){
+                    placeFields = PlaceFieldFromString(value: field)
+                }else{
+                    placeFields = GMSPlaceField(rawValue: UInt(placeFields!.rawValue) | UInt(PlaceFieldFromString(value: field).rawValue))
+                }
+            }
+        }
+        
+        placesClient?.fetchPlace(fromPlaceID: placeId as! String, placeFields: placeFieldsStringArray?.isEmpty == false ? placeFields! : GMSPlaceField.all, sessionToken: nil, callback: {
             (place, error) in
             if let error = error {
                 result(FlutterError.init(code: ErrorCodes.placeDetailsError.rawValue, message: error.localizedDescription, details: nil))
             }
             if let place = place{
+                if(place.photos != nil || place.photos?.isEmpty == false){
+                    if(self.photoMetadatas == nil){
+                        self.photoMetadatas = []
+                    }
+                    self.photoMetadatas?.append(contentsOf: place.photos!)
+                }
                 result(place.toJson())
             }
         })
@@ -103,7 +124,30 @@ public class GooglePlacesIosPlugin: NSObject, FlutterPlugin {
     
     private func onPlacePhoto(_ call: FlutterMethodCall, result: @escaping FlutterResult){
         let args = call.arguments as? Dictionary<String, Any?>
+        let photoMetadataMap = args?["photoMetadata"] as? Dictionary<String, Any?>
+        let ref = photoMetadataMap?["ref"] as? String
         
+        if(ref == nil){
+            result(FlutterError.init(code: ErrorCodes.missingParameter.rawValue, message: "Ref parameter is missing",details: nil))
+        }
+        
+        let photoMetadata = photoMetadatas?.first(where: {$0.hashValue == Int(ref!)}) as?
+        GMSPlacePhotoMetadata
+        
+        if(photoMetadata == nil) {
+            result(FlutterError.init(code: ErrorCodes.placePhotoError.rawValue,
+                                     message: "PhotoMetadata is not cached", details: nil))
+        }
+        
+        placesClient?.loadPlacePhoto(photoMetadata!, callback: {
+            (photo, error) -> Void in
+            if let error = error {
+                result(FlutterError.init(code: ErrorCodes.placePhotoError.rawValue,message:
+                                            error.localizedDescription, details:nil))
+            } else {
+                result(photo?.pngData())
+            }
+        })
     }
 }
 
@@ -118,8 +162,8 @@ enum Keys: String {
 
 enum ErrorCodes: String{
     case uninitialized = "Uninitialized",
-    missingParameter = "Missing-Parameter",
-    autoCompleteError = "Auto-Complete-Error",
-    placeDetailsError = "Place-Details-Error",
-    placePhotoError = "Place-Photo-Error"
+         missingParameter = "Missing-Parameter",
+         autoCompleteError = "Auto-Complete-Error",
+         placeDetailsError = "Place-Details-Error",
+         placePhotoError = "Place-Photo-Error"
 }
