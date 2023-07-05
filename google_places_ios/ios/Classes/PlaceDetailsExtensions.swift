@@ -53,15 +53,15 @@ extension GMSPlacesBusinessStatus {
 
 // Not available for iOS 11
 /*extension GMSBooleanPlaceAttribute{
-    var value: Bool? {
-        switch(self){
-        case GMSBooleanPlaceAttribute.false: return false
-        case GMSBooleanPlaceAttribute.true: return true
-        case GMSBooleanPlaceAttribute.unknown: return nil
-        default: return nil
-        }
-    }
-}*/
+ var value: Bool? {
+ switch(self){
+ case GMSBooleanPlaceAttribute.false: return false
+ case GMSBooleanPlaceAttribute.true: return true
+ case GMSBooleanPlaceAttribute.unknown: return nil
+ default: return nil
+ }
+ }
+ }*/
 
 extension GMSOpeningHours {
     func toJson() -> Dictionary<String, Any?> {
@@ -108,5 +108,29 @@ extension GMSPlaceOpenStatus{
         case GMSPlaceOpenStatus.unknown: return nil
         default: return nil
         }
+    }
+}
+
+func PlaceFieldFromString(value: String) -> GMSPlaceField {
+    switch(value){
+    case "ADDRESS": return GMSPlaceField.formattedAddress
+    case "ADDRESS_COMPONENTS": return GMSPlaceField.addressComponents
+    case "BUSINESS_STATUS": return GMSPlaceField.businessStatus
+    case "ID": return GMSPlaceField.placeID
+    case "LAT_LNG": return GMSPlaceField.coordinate
+    case "NAME": return GMSPlaceField.name
+    case "OPENING_HOURS": return GMSPlaceField.openingHours
+    case "PHONE_NUMBER": return GMSPlaceField.phoneNumber
+    case "PHOTO_METADATAS": return GMSPlaceField.photos
+    case "PLUS_CODE": return GMSPlaceField.plusCode
+    case "PRICE_LEVEL": return GMSPlaceField.priceLevel
+    case "RATING": return GMSPlaceField.rating
+    case "TYPES": return GMSPlaceField.types
+    case "USER_RATINGS_TOTAL": return GMSPlaceField.userRatingsTotal
+    case "UTC_OFFSET": return GMSPlaceField.utcOffsetMinutes
+    case "VIEWPORT": return GMSPlaceField.viewport
+    case "WEBSITE_URI": return GMSPlaceField.website
+    default:
+        fatalError("Invalid placeField: \(value)")
     }
 }

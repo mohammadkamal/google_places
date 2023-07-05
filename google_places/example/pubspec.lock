@@ -87,7 +87,7 @@ packages:
     description:
       path: google_places_android
       ref: HEAD
-      resolved-ref: "32b79bba3d8a90617af26f4e25c1c05d232f35d9"
+      resolved-ref: ce0426dc51a504d37e1385ceb84c5bb88f49370b
       url: "https://github.com/mohammadkamal/google_places"
     source: git
     version: "0.0.1"
@@ -96,7 +96,7 @@ packages:
     description:
       path: google_places_ios
       ref: HEAD
-      resolved-ref: "32b79bba3d8a90617af26f4e25c1c05d232f35d9"
+      resolved-ref: ce0426dc51a504d37e1385ceb84c5bb88f49370b
       url: "https://github.com/mohammadkamal/google_places"
     source: git
     version: "0.0.1"

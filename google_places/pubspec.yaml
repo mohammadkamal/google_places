@@ -12,13 +12,15 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
   google_places_android:
-   git:
-     url: https://github.com/mohammadkamal/google_places
-     path: google_places_android/
+    # path: ../google_places_android/
+    git:
+      url: https://github.com/mohammadkamal/google_places
+      path: google_places_android/
   google_places_ios:
-   git:
-     url: https://github.com/mohammadkamal/google_places
-     path: google_places_ios/
+    # path: ../google_places_ios/
+    git:
+      url: https://github.com/mohammadkamal/google_places
+      path: google_places_ios/
 
 dev_dependencies:
   flutter_test:

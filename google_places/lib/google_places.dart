@@ -1,5 +1,7 @@
 library google_places;
 
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -16,6 +18,7 @@ part 'src/models/place_details.dart';
 part 'src/models/plus_code.dart';
 part 'src/models/rectangular_bounds.dart';
 part 'src/models/time_of_week.dart';
+part 'src/models/cancellation_token.dart';
 
 // Enums
 part 'src/enums/business_status.dart';

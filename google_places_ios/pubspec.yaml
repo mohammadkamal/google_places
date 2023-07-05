@@ -1,7 +1,7 @@
 name: google_places_ios
 description: A new Flutter plugin project.
-version: 0.0.1
-homepage: https://github.com/mohammadkamal/google_places/google_places_ios
+version: 1.0.0
+homepage: https://github.com/mohammadkamal/google_places
 
 environment:
   sdk: '>=3.0.2 <4.0.0'

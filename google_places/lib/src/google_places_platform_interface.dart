@@ -35,18 +35,30 @@ abstract class GooglePlacesPlatform extends PlatformInterface {
     RectangularBounds? locationBias,
     RectangularBounds? locationRestriction,
     List<PlaceType>? placeTypes,
+    CancellationToken? cancellationToken,
   }) async {
     throw UnimplementedError(
         'getAutoCompletePredictions() has not been implemented');
   }
 
-  Future<PlaceDetails> fetchPlaceDetails(String placeId,
-      {List<PlaceField>? placeFields}) async {
+  Future<PlaceDetails> fetchPlaceDetails(
+    String placeId, {
+    List<PlaceField>? placeFields,
+    CancellationToken? cancellationToken,
+  }) async {
     throw UnimplementedError('fetchPlaceDetails() has not been implemented');
   }
 
-  Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
-      {int? maxWidth, int? maxHeight}) async {
+  Future<Uint8List> fetchPlacePhoto(
+    PhotoMetadata metadata, {
+    int? maxWidth,
+    int? maxHeight,
+    CancellationToken? cancellationToken,
+  }) async {
     throw UnimplementedError('fetchPlacePhoto() has not been implemented');
+  }
+
+  Future<void> cancelRequest(int tokenCode) {
+    throw UnimplementedError('cancelRequest() has not been implemented');
   }
 }

@@ -5,7 +5,8 @@ enum _Methods {
   updateLocale,
   autoComplete,
   placeDetails,
-  placePhoto
+  placePhoto,
+  cancelRequest
 }
 
 enum _Args {
@@ -20,7 +21,8 @@ enum _Args {
   placeTypes,
   photoMetadata,
   maxWidth,
-  maxHeight
+  maxHeight,
+  cancelToken
 }
 
 /// An implementation of [GooglePlacesPlatform] that uses method channels.
@@ -64,6 +66,7 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
     RectangularBounds? locationBias,
     RectangularBounds? locationRestriction,
     List<PlaceType>? placeTypes,
+    CancellationToken? cancellationToken,
   }) async {
     try {
       final result = await methodChannel.invokeListMethod(
@@ -74,6 +77,7 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
             _Args.locationBias.name: locationBias?.toJson(),
             _Args.locationRestriction.name: locationRestriction?.toJson(),
             _Args.placeTypes.name: placeTypes?.map((t) => t.value).toList(),
+            _Args.cancelToken.name: cancellationToken.hashCode,
           }..removeWhere((key, value) => value == null));
 
       final temp = result?.map((e) => Map<String, dynamic>.from(e)).toList();
@@ -88,13 +92,15 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
 
   @override
   Future<PlaceDetails> fetchPlaceDetails(String placeId,
-      {List<PlaceField>? placeFields}) async {
+      {List<PlaceField>? placeFields,
+      CancellationToken? cancellationToken}) async {
     try {
       final place = Map<String, dynamic>.from(await methodChannel.invokeMethod(
           _Methods.placeDetails.name,
           {
             _Args.placeId.name: placeId,
-            _Args.placeFields.name: placeFields?.map((e) => e.value).toList()
+            _Args.placeFields.name: placeFields?.map((e) => e.value).toList(),
+            _Args.cancelToken.name: cancellationToken.hashCode,
           }..removeWhere((key, value) => value == null)));
 
       return PlaceDetails.fromJson(place);
@@ -106,8 +112,12 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
   }
 
   @override
-  Future<Uint8List> fetchPlacePhoto(PhotoMetadata metadata,
-      {int? maxWidth, int? maxHeight}) async {
+  Future<Uint8List> fetchPlacePhoto(
+    PhotoMetadata metadata, {
+    int? maxWidth,
+    int? maxHeight,
+    CancellationToken? cancellationToken,
+  }) async {
     try {
       final photo = await methodChannel.invokeMethod<Uint8List>(
           _Methods.placePhoto.name,
@@ -121,6 +131,16 @@ class MethodChannelGooglePlaces extends GooglePlacesPlatform {
     } on PlatformException catch (ex) {
       return Future.error(ex);
     } catch (ex) {
+      return Future.error(ex);
+    }
+  }
+
+  @override
+  Future<void> cancelRequest(int tokenCode) async {
+    try {
+      await methodChannel.invokeMethod(
+          _Methods.cancelRequest.name, {_Args.cancelToken.name: tokenCode});
+    } on PlatformException catch (ex) {
       return Future.error(ex);
     }
   }
