@@ -1,4 +1,4 @@
-part of '../../google_places.dart';
+part of '../../google_places_sdk.dart';
 
 class LatLngBounds {
   final LatLngCoords northeast;

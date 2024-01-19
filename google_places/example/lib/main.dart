@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:google_places/google_places.dart';
+import 'package:google_places_sdk/google_places_sdk.dart';
 
 void main() {
   runApp(const MyApp());

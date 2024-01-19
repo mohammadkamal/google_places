@@ -75,30 +75,28 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_places:
+  google_places_android:
+    dependency: transitive
+    description:
+      name: google_places_android
+      sha256: cc4de5f6f0b2e182d935be5ae58eb08bdf54a49aadc57e668c139a0a9b354592
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  google_places_ios:
+    dependency: transitive
+    description:
+      name: google_places_ios
+      sha256: ab8fee5aaf554df92a6df698d5c76e4dcb164cffeccf29da3dce8c09c272be94
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  google_places_sdk:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0"
-  google_places_android:
-    dependency: transitive
-    description:
-      path: google_places_android
-      ref: HEAD
-      resolved-ref: fd60c21d12db10cab474b0c27536fd6b4500dc6a
-      url: "https://github.com/mohammadkamal/google_places"
-    source: git
-    version: "1.0.0"
-  google_places_ios:
-    dependency: transitive
-    description:
-      path: google_places_ios
-      ref: HEAD
-      resolved-ref: fd60c21d12db10cab474b0c27536fd6b4500dc6a
-      url: "https://github.com/mohammadkamal/google_places"
-    source: git
     version: "1.0.0"
   lints:
     dependency: transitive
