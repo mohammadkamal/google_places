@@ -1,4 +1,4 @@
-part of google_places;
+part of '../../google_places.dart';
 
 enum PlaceField {
   address("ADDRESS", 0),

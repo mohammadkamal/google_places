@@ -1,4 +1,4 @@
-part of google_places;
+part of '../../google_places.dart';
 
 enum PriceLevel {
   unknown(-1),
