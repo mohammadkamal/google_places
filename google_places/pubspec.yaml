@@ -1,5 +1,5 @@
 name: google_places
-description: A new Flutter plugin project.
+description: A flutter plugin to use google places SDK
 version: 1.0.0
 homepage: https://github.com/mohammadkamal/google_places
 
