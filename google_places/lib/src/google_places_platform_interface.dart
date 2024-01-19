@@ -1,4 +1,4 @@
-part of google_places;
+part of '../google_places.dart';
 
 abstract class GooglePlacesPlatform extends PlatformInterface {
   /// Constructs a GooglePlacesPlatform.
