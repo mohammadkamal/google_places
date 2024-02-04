@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 // Models
@@ -31,3 +32,7 @@ part 'src/enums/price_level.dart';
 part 'src/google_places.dart';
 part 'src/google_places_method_channel.dart';
 part 'src/google_places_platform_interface.dart';
+
+// Generated
+part 'google_places_sdk.freezed.dart';
+part 'google_places_sdk.g.dart';

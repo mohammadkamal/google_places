@@ -1,5 +1,6 @@
 part of '../../google_places_sdk.dart';
 
+@freezed
 class LatLngBounds {
   final LatLngCoords northeast;
   final LatLngCoords southwest;

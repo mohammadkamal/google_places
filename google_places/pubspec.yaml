@@ -13,11 +13,16 @@ dependencies:
   plugin_platform_interface: ^2.0.2
   google_places_android: ^1.0.0
   google_places_ios: ^1.0.0
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+  freezed: ^2.4.6
+  build_runner: ^2.4.8
+  json_serializable: ^6.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
