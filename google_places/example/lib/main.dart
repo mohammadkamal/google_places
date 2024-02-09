@@ -46,7 +46,8 @@ class _HomePageContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
               onPressed: () => Navigator.push(context,
@@ -137,19 +138,27 @@ class AutoCompleteTile extends StatelessWidget {
         TableRow(children: [
           const Text('Place ID'),
           TextButton(
-              onPressed: () =>
-                  navigateToPage(context, placeId: prediction.placeId),
-              child: Text(prediction.placeId))
+              onPressed: () {
+                if (prediction.placeId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Place Id not found')));
+                }
+
+                navigateToPage(context, placeId: prediction.placeId!);
+              },
+              child: Text(prediction.placeId ?? ''))
         ]),
-        TableRow(
-            children: [const Text('Full name'), Text(prediction.fullName)]),
+        TableRow(children: [
+          const Text('Full name'),
+          Text(prediction.fullName ?? '')
+        ]),
         TableRow(children: [
           const Text('Primary text'),
-          Text(prediction.primaryText)
+          Text(prediction.primaryText ?? '')
         ]),
         TableRow(children: [
           const Text('Secondary text'),
-          Text(prediction.secondaryText)
+          Text(prediction.secondaryText ?? '')
         ]),
         TableRow(children: [const Text('PlaceTypes'), Container()]),
         ...prediction.placeTypes
@@ -339,7 +348,8 @@ class _PlacePhotoPageState extends State<PlacePhotoPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Photo')),
       body: Center(
-        child: photo == null ? const Text('No image yet') : Image.memory(photo!),
+        child:
+            photo == null ? const Text('No image yet') : Image.memory(photo!),
       ),
     );
   }

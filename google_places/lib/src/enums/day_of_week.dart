@@ -1,6 +1,7 @@
 part of '../../google_places_sdk.dart';
 
 enum DayOfWeek {
+  undefined(-1),
   sunday(1),
   monday(2),
   tuesday(3),
@@ -31,6 +32,17 @@ extension DayOfWeekX on DayOfWeek {
         return DateTime.friday;
       case DayOfWeek.saturday:
         return DateTime.saturday;
+      default:
+        return -1;
     }
   }
+}
+
+class _DayOfWeekConverter {
+  DayOfWeek fromJson(int id) {
+    return DayOfWeek.values
+        .firstWhere((e) => e.id == id, orElse: () => DayOfWeek.undefined);
+  }
+
+  int toJson(DayOfWeek value) => value.id;
 }

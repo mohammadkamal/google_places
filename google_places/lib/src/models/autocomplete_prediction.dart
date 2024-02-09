@@ -1,18 +1,22 @@
 part of '../../google_places_sdk.dart';
 
-class AutocompletePrediction {
-  final String fullName;
-  final String placeId;
-  final List<PlaceType> placeTypes;
-  final String primaryText;
-  final String secondaryText;
+class _ArgNotPassed {
+  const _ArgNotPassed();
+}
 
-  AutocompletePrediction({
-    required this.fullName,
-    required this.placeId,
-    required this.placeTypes,
-    required this.primaryText,
-    required this.secondaryText,
+class AutocompletePrediction {
+  final String? fullName;
+  final String? placeId;
+  final List<PlaceType> placeTypes;
+  final String? primaryText;
+  final String? secondaryText;
+
+  const AutocompletePrediction({
+    this.fullName,
+    this.placeId,
+    this.placeTypes = const <PlaceType>[],
+    this.primaryText,
+    this.secondaryText,
   });
 
   AutocompletePrediction copyWith({
@@ -21,45 +25,78 @@ class AutocompletePrediction {
     List<PlaceType>? placeTypes,
     String? primaryText,
     String? secondaryText,
-  }) {
-    return AutocompletePrediction(
-      fullName: fullName ?? this.fullName,
-      placeId: placeId ?? this.placeId,
-      placeTypes: placeTypes ?? this.placeTypes,
-      primaryText: primaryText ?? this.primaryText,
-      secondaryText: secondaryText ?? this.secondaryText,
-    );
-  }
+  }) =>
+      _$AutocompletePredictionCopyWith(
+        this,
+        fullName: fullName,
+        placeId: placeId,
+        placeTypes: placeTypes,
+        primaryText: primaryText,
+        secondaryText: secondaryText,
+      );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'fullName': fullName,
-      'placeId': placeId,
-      'placeTypes': placeTypes.map((t) => t.value).toList(),
-      'primaryText': primaryText,
-      'secondaryText': secondaryText,
-    };
-  }
+  Map<String, dynamic> toJson() => _$AutocompletePredictionToJson(this);
 
-  factory AutocompletePrediction.fromJson(Map<String, dynamic> json) {
-    return AutocompletePrediction(
-      fullName: json['fullName'],
-      placeId: json['placeId'],
-      placeTypes: List<String>.from(json['placeTypes'])
-          .map((t) => PlaceType.values.firstWhere((e) => e.value == t))
-          .toList(),
-      primaryText: json['primaryText'],
-      secondaryText: json['secondaryText'],
-    );
-  }
+  factory AutocompletePrediction.fromJson(Map<String, dynamic> json) =>
+      _$AutocompletePredictionFromJson(json);
 
   @override
   String toString() {
-    return '$AutocompletePrediction('
+    return 'AutocompletePrediction('
         'fullName: $fullName, '
         'placeId: $placeId, '
         'placeTypes: $placeTypes, '
         'primaryText: $primaryText, '
-        'secondaryText: $secondaryText)';
+        'secondaryText: $secondaryText'
+        ')';
   }
+}
+
+AutocompletePrediction _$AutocompletePredictionCopyWith(
+  AutocompletePrediction value, {
+  Object? fullName = const _ArgNotPassed(),
+  Object? placeId = const _ArgNotPassed(),
+  Object? placeTypes = const _ArgNotPassed(),
+  Object? primaryText = const _ArgNotPassed(),
+  Object? secondaryText = const _ArgNotPassed(),
+}) {
+  return AutocompletePrediction(
+    fullName: fullName is _ArgNotPassed ? value.fullName : fullName as String?,
+    placeId: placeId is _ArgNotPassed ? value.placeId : placeId as String?,
+    placeTypes: placeTypes is _ArgNotPassed
+        ? value.placeTypes
+        : placeTypes as List<PlaceType>,
+    primaryText: primaryText is _ArgNotPassed
+        ? value.primaryText
+        : primaryText as String?,
+    secondaryText: secondaryText is _ArgNotPassed
+        ? value.secondaryText
+        : secondaryText as String?,
+  );
+}
+
+Map<String, dynamic> _$AutocompletePredictionToJson(
+    AutocompletePrediction value) {
+  return {
+    'fullName': value.fullName,
+    'placeId': value.placeId,
+    'placeTypes': value.placeTypes.map(_PlaceTypeConverter().toJson).toList(),
+    'primaryText': value.primaryText,
+    'secondaryText': value.secondaryText,
+  };
+}
+
+AutocompletePrediction _$AutocompletePredictionFromJson(
+    Map<String, dynamic> json) {
+  return AutocompletePrediction(
+    fullName: json['fullName'],
+    placeId: json['placeId'],
+    placeTypes: json['placeTypes'] == null
+        ? <PlaceType>[]
+        : List<String>.from(json['placeTypes'])
+            .map(_PlaceTypeConverter().fromJson)
+            .toList(),
+    primaryText: json['primaryText'],
+    secondaryText: json['secondaryText'],
+  );
 }
