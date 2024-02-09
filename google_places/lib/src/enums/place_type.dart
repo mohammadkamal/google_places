@@ -147,20 +147,9 @@ enum PlaceType {
   const PlaceType(this.value);
 }
 
-class _PlaceTypeConverter implements JsonConverter<PlaceType, String> {
-  const _PlaceTypeConverter();
+class _PlaceTypeConverter {
+  PlaceType fromJson(String json) => PlaceType.values
+      .firstWhere((t) => json.toLowerCase() == t.value, orElse: () => PlaceType.other);
 
-  @override
-  PlaceType fromJson(String json) {
-    try {
-      return PlaceType.values.firstWhere((t) => json == t.value);
-    } catch (ex) {
-      return PlaceType.other;
-    }
-  }
-
-  @override
-  String toJson(PlaceType object) {
-    return object.value;
-  }
+  String toJson(PlaceType object) => object.value;
 }

@@ -11,3 +11,12 @@ enum BusinessStatus {
 
   const BusinessStatus(this.value, this.id);
 }
+
+class _BusinessStatusConverter {
+  BusinessStatus fromJson(String value) {
+    return BusinessStatus.values.firstWhere((e) => e.value == value,
+        orElse: () => BusinessStatus.unknown);
+  }
+
+  String toJson(BusinessStatus status) => status.value;
+}
