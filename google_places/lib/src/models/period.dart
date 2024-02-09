@@ -2,7 +2,10 @@ part of '../../google_places_sdk.dart';
 
 /// Represents a time segment. It may contain an open ```TimeOfWeek```, or a close ```TimeOfWeek```, or both.
 class Period {
+  /// The time marker for when the place closes or null if it's always open.
   final TimeOfWeek? close;
+
+  /// The time marker for when the Place opens.
   final TimeOfWeek? open;
 
   /// Represents a time segment. It may contain an open ```TimeOfWeek```, or a close ```TimeOfWeek```, or both.

@@ -1,5 +1,8 @@
 part of '../../google_places_sdk.dart';
 
+/// Helper enum that contains most of the supported place types for autocomplete place predictions.
+///
+/// For more information, visit [PlaceTypes](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/PlaceTypes).
 enum PlaceType {
   other("other"),
   accounting("accounting"),

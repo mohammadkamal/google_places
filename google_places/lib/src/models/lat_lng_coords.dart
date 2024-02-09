@@ -1,9 +1,14 @@
 part of '../../google_places_sdk.dart';
 
+/// A class representing a pair of latitude and longitude coordinates, stored as degrees.
 class LatLngCoords {
+  /// Latitude
   final double? lat;
+
+  /// Longitude
   final double? lng;
 
+  /// A class representing a pair of latitude and longitude coordinates, stored as degrees.
   const LatLngCoords({this.lat, this.lng});
 
   /// A method to copy and replace attributes.

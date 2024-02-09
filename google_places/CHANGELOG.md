@@ -1,3 +1,6 @@
+## 1.1.2
+* Provided documentation to the attributes from Google API.
+
 ## 1.1.1
 * Provided documentation to the models.
 

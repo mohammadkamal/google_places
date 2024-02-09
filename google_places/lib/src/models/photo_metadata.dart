@@ -2,8 +2,13 @@ part of '../../google_places_sdk.dart';
 
 /// The metadata corresponding to a single photo associated with a place.
 class PhotoMetadata {
+  /// The attributions that must be shown to the user if this photo is displayed.
   final String? attributions;
+
+  /// The maximum width in which this photo is available.
   final int? width;
+
+  /// The maximum height in which this photo is available.
   final int? height;
   final String? ref;
 

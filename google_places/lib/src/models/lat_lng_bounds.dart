@@ -1,9 +1,16 @@
 part of '../../google_places_sdk.dart';
 
+/// A class representing a latitude/longitude aligned rectangle.
 class LatLngBounds {
+  /// Northeast corner of the bound.
   final LatLngCoords? northeast;
+
+  /// Southwest corner of the bound.
   final LatLngCoords? southwest;
 
+  /// A class representing a latitude/longitude aligned rectangle.
+  ///
+  /// For more information, visit [LatLngBounds](https://developers.google.com/android/reference/com/google/android/gms/maps/model/LatLngBounds.html).
   const LatLngBounds({this.northeast, this.southwest});
 
   /// A method to copy and replace attributes.

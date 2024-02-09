@@ -4,7 +4,10 @@ part of '../../google_places_sdk.dart';
 ///
 /// This type of bounds can be used for location biases and restrictions.
 class RectangularBounds {
+  /// The northeast corner of the rectangular bounds, specified by its latitude-longitude coordinates.
   final LatLngCoords? northeast;
+
+  /// The southwest corner of the rectangular bounds, specified by its latitude-longitude coordinates.
   final LatLngCoords? southwest;
 
   /// Represents a rectangle-shaped bounds around a geographical area, defined by the latitude-longitude coordinates of the ```southwest``` and ```northeast``` corners.

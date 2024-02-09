@@ -5,27 +5,111 @@ part of '../../google_places_sdk.dart';
 /// A Place encapsulates information about a physical location, including its name, address, and any other information we might have about it.
 
 class PlaceDetails {
+  /// The unique ID of this Place.
+  ///
+  /// This ID can be defined in a [fetchPlaceDetails], to look up the same place at a later time. Place ID data is constantly changing, so it is possible for subsequent requests using the same ID to fail (for example, if the place no longer exists in the database). A returned Place may also have a different ID from the ID specified in the request, as there may be multiple IDs for a given place.
   final String? placeId;
+
+  /// The name of this Place.
+  ///
+  /// The name is localized according to the locale specified in:
+  /// ```dart
+  /// GooglePlaces.initialize(String apiKey, Locale locale)
+  /// ```
+  /// if set; otherwise it uses the device's locale.
   final String? name;
+
+  /// The location of this Place.
+  ///
+  /// The location is not necessarily the center of the Place, or any particular entry or exit point, but some arbitrarily chosen point within the geographic extent of the Place.
   final LatLngCoords? latLng;
+
+  /// A human-readable address for this Place. May return null if the address is unknown.
+  ///
+  /// The address is localized according to the locale specified in:
+  /// ```dart
+  /// GooglePlaces.initialize(String apiKey, Locale locale)
+  /// ```
+  /// if set; otherwise it uses the device's locale.
   final String? address;
+
+  /// The ```BusinessStatus``` for this Place.
   final BusinessStatus? businessStatus;
+
+  /// A boolean for the curbside pickup.
   final bool? curbsidePickup;
+
+  /// A boolean for the curbside delivery.
   final bool? delivery;
+
+  /// A boolean for indoor or outdoor seating options.
   final bool? dineIn;
+
+  /// The ```int``` value of the icon background color. Returns null if not available.
+  ///
+  /// The background color is according to the Place's type. It can be used to color the view behind the icon.
   final int? iconBackgroundColor;
+
+  /// The icon PNG URL string to the Places's type. Returns null if not available.
+  ///
+  /// The URL link does not expire and the image size aspect ratio may be different depending on type.
   final String? iconURL;
+
+  /// This Place's normal business hours.
   final OpeningHours? openingHours;
+
+  /// The place's phone number in international format. Returns null if no phone number is known, or the place has no phone number.
+  ///
+  /// International format includes the country code, and is prefixed with the plus (+) sign. For example, the international phone number for Google's Mountain View, USA office is +1 650-253-0000.
   final String? phoneNumber;
+
+  /// The metadata for a photo associated with a place.
+  ///
+  /// Photos are sourced from a variety of locations, including business owners and photos contributed by Google+ users. In most cases, these photos can be used without attribution, or will have the required attribution included as a part of the image.
+  ///
+  /// Must be used to fetch photo in:
+  /// ```dart
+  /// GooglePlaces().fetchPlacePhoto(PhotoMetadata photoMetadata)
+  /// ```
   final List<PhotoMetadata>? photoMetadatas;
+
+  /// The PlusCode location of this Place.
+  ///
+  /// The location is not necessarily the center of the Place, or any particular entry or exit point, but some arbitrarily chosen point within the geographic extent of the Place.
   final PlusCode? plusCode;
+
+  /// Returns the price level for this place on a scale from [PriceLevel.free] to [PriceLevel.expensive].
+  ///
+  /// If no price level is known, null is returned.
+  ///
+  /// The exact amount indicated by a specific value will vary from region to region.
   final PriceLevel? priceLevel;
+
+  /// The place's rating, from ```0``` to ```5```, based on aggregated user reviews.
+  ///
+  /// If no rating is known, null is returned.
   final double? rating;
+
+  /// A list of place types for this Place.
   final List<PlaceType>? placeTypes;
+
+  /// The total number of user ratings of this Place. Returns null if the number of user ratings is not known.
   final int? userRatingTotal;
+
+  /// The number of minutes this place’s current timezone is offset from UTC.
   final int? utcOffsetMinutes;
+
+  /// Viewport for displaying this Place. May return null if the size of the place is not known.
+  ///
+  /// This returns a viewport of a size that is suitable for displaying this Place. For example, a Place representing a store may have a relatively small viewport, while a Place representing a country may have a very large viewport.
   final LatLngBounds? viewport;
+
+  /// The ```URI``` of the website of this Place. Returns null if no website is known.
+  ///
+  /// This is the URI of the website maintained by the Place, if available.
   final Uri? websiteURI;
+
+  /// A boolean to show if the place is open or not.
   final bool? isOpen;
 
   /// Represents a particular physical place.

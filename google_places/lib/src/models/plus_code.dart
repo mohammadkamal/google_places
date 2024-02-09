@@ -2,7 +2,10 @@ part of '../../google_places_sdk.dart';
 
 /// Plus Code, or Open Location Code (OLC), is a geocode system for identifying any geographical area on Earth, even when a street address does not exist.
 class PlusCode {
+  /// The compound plus code, e.g. "9G8F+5W Zurich, Switzerland".
   final String? compoundCode;
+
+  /// The geo plus code, e.g. "8FVC9G8F+5W".
   final String? globalCode;
 
   /// Plus Code, or Open Location Code (OLC), is a geocode system for identifying any geographical area on Earth, even when a street address does not exist.

@@ -2,7 +2,13 @@ part of '../../google_places_sdk.dart';
 
 /// Represents information on when a Place will be open during the week.
 class OpeningHours {
+  /// Returns a list of strings that represent opening and closing hours in human readable form. For example:
+  ///
+  /// * "Monday: 8:30 AM – 5:30 PM"
+  /// * "Saturday: Closed"
   final List<String>? weekdayText;
+
+  /// A list of Period objects that provide more detailed information that is equivalent to the data provided by [weekdayText].
   final List<Period>? periods;
 
   /// Represents information on when a Place will be open during the week.

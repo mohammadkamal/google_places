@@ -12,15 +12,15 @@ class GooglePlaces {
 
   static final _singleton = GooglePlaces._();
   GooglePlaces._();
-  
+
   /// Plugin to utilize Google Places SDK.
-  /// 
+  ///
   /// To use the plugin, initialize it with google api key
-  /// 
+  ///
   /// ```dart
   /// await GooglePlaces().initialize('Your api key');
   /// ```
-  /// 
+  ///
   /// For more information on how you can get an API key visit [Authenticate by using API keys](https://cloud.google.com/docs/authentication/api-keys)
   factory GooglePlaces() => _singleton;
 

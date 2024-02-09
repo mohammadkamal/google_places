@@ -1,5 +1,8 @@
 part of '../../google_places_sdk.dart';
 
+/// Represents a day of the week.
+///
+/// For more information, visit [DayOfWeek](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/DayOfWeek).
 enum DayOfWeek {
   undefined(-1),
   sunday(1),

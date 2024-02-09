@@ -6,10 +6,25 @@ class _ArgNotPassed {
 
 /// A class represents the result of google auto complete prediction. Used in places search.
 class AutocompletePrediction {
+  /// The full name of a place. This is a combination of the primary text and the secondary text.
+  ///
+  /// Example: "Eiffel Tower, Avenue Anatole France, Paris, France"
   final String? fullName;
+
+  /// The place ID of the place being referred to by this prediction.
   final String? placeId;
+
+  /// The list of place types associated with the place.
   final List<PlaceType> placeTypes;
+
+  /// The primary text of a place. This will usually be the name of the place.
+  ///
+  /// Example: "Eiffel Tower", "123 Pitt Street"
   final String? primaryText;
+
+  /// The secondary text of a place. This provides extra context on the place, and can be used as a second line when showing autocomplete predictions.
+  ///
+  /// Example: "Avenue Anatole France, Paris, France", "Sydney, New South Wales"
   final String? secondaryText;
 
   /// Search result for the places search.

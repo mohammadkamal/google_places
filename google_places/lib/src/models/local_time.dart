@@ -2,7 +2,9 @@ part of '../../google_places_sdk.dart';
 
 /// Represents a local time with just hours and minutes.
 class LocalTime {
+  /// The hours in 24 hour format.
   final int? hours;
+
   final int? minutes;
 
   /// Represents a local time with just hours and minutes.
