@@ -1,5 +1,5 @@
 name: google_places_sdk
-description: A flutter plugin to use google places SDK
+description: A flutter plugin to use google places SDK. This plugin supports Auto complete, place details and google photos.
 version: 1.1.0
 homepage: https://github.com/mohammadkamal/google_places
 
