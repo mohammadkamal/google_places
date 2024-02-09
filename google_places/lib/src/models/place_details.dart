@@ -1,5 +1,9 @@
 part of '../../google_places_sdk.dart';
 
+/// Represents a particular physical place.
+///
+/// A Place encapsulates information about a physical location, including its name, address, and any other information we might have about it.
+
 class PlaceDetails {
   final String? placeId;
   final String? name;
@@ -24,6 +28,11 @@ class PlaceDetails {
   final Uri? websiteURI;
   final bool? isOpen;
 
+  /// Represents a particular physical place.
+  ///
+  /// A Place encapsulates information about a physical location, including its name, address, and any other information we might have about it.
+  ///
+  /// For more information, visit [Place](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/Place).
   const PlaceDetails({
     this.placeId,
     this.name,
@@ -49,6 +58,10 @@ class PlaceDetails {
     this.isOpen,
   });
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   PlaceDetails copyWith({
     String? placeId,
     String? name,
@@ -100,8 +113,10 @@ class PlaceDetails {
     );
   }
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$PlaceDetailsToJson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory PlaceDetails.fromJson(Map<String, dynamic> json) =>
       _$PlaceDetailsFromJson(json);
 

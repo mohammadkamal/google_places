@@ -1,11 +1,17 @@
 part of '../../google_places_sdk.dart';
 
+/// The metadata corresponding to a single photo associated with a place.
 class PhotoMetadata {
   final String? attributions;
   final int? width;
   final int? height;
   final String? ref;
 
+  /// The metadata corresponding to a single photo associated with a place.
+  ///
+  /// Used to fetch photos from [PlaceDetails].
+  ///
+  /// For more information, visit [PhotoMetadata](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/PhotoMetadata).
   const PhotoMetadata({
     this.attributions,
     this.width,
@@ -13,6 +19,10 @@ class PhotoMetadata {
     this.ref,
   });
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   PhotoMetadata copyWith({
     String? attributions,
     int? width,
@@ -27,8 +37,10 @@ class PhotoMetadata {
         ref: ref,
       );
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$PhotoMetadataToJson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory PhotoMetadata.fromJson(Map<String, dynamic> json) =>
       _$PhotoMetadataFromJson(json);
 

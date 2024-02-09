@@ -148,8 +148,9 @@ enum PlaceType {
 }
 
 class _PlaceTypeConverter {
-  PlaceType fromJson(String json) => PlaceType.values
-      .firstWhere((t) => json.toLowerCase() == t.value, orElse: () => PlaceType.other);
+  PlaceType fromJson(String json) =>
+      PlaceType.values.firstWhere((t) => json.toLowerCase() == t.value,
+          orElse: () => PlaceType.other);
 
   String toJson(PlaceType object) => object.value;
 }

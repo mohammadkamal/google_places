@@ -6,11 +6,17 @@ class LatLngCoords {
 
   const LatLngCoords({this.lat, this.lng});
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   LatLngCoords copyWith({double? lat, double? lng}) =>
       _$LatLngCoordsCopyWith(this, lat: lat, lng: lng);
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$LatLngCoordsTojson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory LatLngCoords.fromJson(Map<String, dynamic> json) =>
       _$LatLngCoordsFromJson(json);
 

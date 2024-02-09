@@ -1,16 +1,26 @@
 part of '../../google_places_sdk.dart';
 
+/// Represents a local time with just hours and minutes.
 class LocalTime {
   final int? hours;
   final int? minutes;
 
+  /// Represents a local time with just hours and minutes.
+  ///
+  /// For more information, visit [LocalTime](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/LocalTime).
   const LocalTime({this.hours, this.minutes});
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   LocalTime copyWith({int? hours, int? minutes}) =>
       _$LocalTimeCopyWith(this, hours: hours, minutes: minutes);
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$LocalTimeToJson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory LocalTime.fromJson(Map<String, dynamic> json) =>
       _$LocalTimeFromJson(json);
 

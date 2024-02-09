@@ -1,16 +1,26 @@
 part of '../../google_places_sdk.dart';
 
+/// Represents the opening or closing details for a Period.
 class TimeOfWeek {
   final DayOfWeek? day;
   final LocalTime? time;
 
+  /// Represents the opening or closing details for a Period.
+  ///
+  /// For more information, visit [TimeOfWeek](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/TimeOfWeek).
   const TimeOfWeek({this.day, this.time});
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   TimeOfWeek copyWith({DayOfWeek? day, LocalTime? time}) =>
       _$TimeOfWeekCopyWith(this, day: day, time: time);
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$TimeOfWeekToJson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory TimeOfWeek.fromJson(Map<String, dynamic> json) =>
       _$TimeOfWeekFromJson(json);
 

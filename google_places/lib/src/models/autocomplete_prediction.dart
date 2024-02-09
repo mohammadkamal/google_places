@@ -4,6 +4,7 @@ class _ArgNotPassed {
   const _ArgNotPassed();
 }
 
+/// A class represents the result of google auto complete prediction. Used in places search.
 class AutocompletePrediction {
   final String? fullName;
   final String? placeId;
@@ -11,6 +12,12 @@ class AutocompletePrediction {
   final String? primaryText;
   final String? secondaryText;
 
+  /// Search result for the places search.
+  ///
+  /// Contains a name for the place [fullName] and an id [placeId].
+  /// [placeId] can be used to fetch photos and [PlaceDetails].
+  ///
+  /// For more information, visits [AutocompletePrediction](https://developers.google.com/maps/documentation/places/android-sdk/reference/com/google/android/libraries/places/api/model/AutocompletePrediction)
   const AutocompletePrediction({
     this.fullName,
     this.placeId,
@@ -19,6 +26,10 @@ class AutocompletePrediction {
     this.secondaryText,
   });
 
+  /// A method to copy and replace attributes.
+  ///
+  /// If the parameter is not passed, it will stay the same.
+  /// However if a ```null``` is passed, it will replace the old value.
   AutocompletePrediction copyWith({
     String? fullName,
     String? placeId,
@@ -35,8 +46,10 @@ class AutocompletePrediction {
         secondaryText: secondaryText,
       );
 
+  /// A method to convert the class to JSON based ```Map```.
   Map<String, dynamic> toJson() => _$AutocompletePredictionToJson(this);
 
+  /// A constructor to parse a JSON ```Map```.
   factory AutocompletePrediction.fromJson(Map<String, dynamic> json) =>
       _$AutocompletePredictionFromJson(json);
 
