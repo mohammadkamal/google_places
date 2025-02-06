@@ -4,7 +4,7 @@ A flutter plugin for Google Places SDK with Android & iOS support.
 
 |             | Android | iOS     |
 |-------------|---------|---------|
-| **Support** | SDK 16+ | iOS 11+ |
+| **Support** | SDK 16+ | iOS 12+ |
 
 ## Usage
 To use this plugin please add ```google_places``` to your [pubspec.yaml](https://docs.flutter.dev/packages-and-plugins/using-packages) file.

@@ -1,4 +1,4 @@
-library google_places_sdk;
+library;
 
 import 'dart:io';
 

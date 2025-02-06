@@ -1,3 +1,6 @@
+## 1.2.0
+* Minimum support in iOS is now 12.0.
+
 ## 1.1.2
 * Provided documentation to the attributes from Google API.
 

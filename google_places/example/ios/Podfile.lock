@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - google_places_ios (1.0.0):
     - Flutter
-    - GooglePlaces (~> 5.1.0)
-  - GooglePlaces (5.1.0)
+    - GooglePlaces (~> 6.2.1)
+  - GooglePlaces (6.2.1)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -20,10 +20,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_places_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  google_places_ios: 922164fc764ce4dc0412128dc7f96cb85cd7980b
-  GooglePlaces: c57cd5aa7e91d10fa5106c792de74f3bd6436260
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  google_places_ios: cb4a859139729e80cff2f77280e5c85a4a31e119
+  GooglePlaces: 94974aa119573d5acc2a35a699948dac838abd73
 
-PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.16.2
