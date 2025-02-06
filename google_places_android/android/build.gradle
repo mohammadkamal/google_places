@@ -25,6 +25,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    if (project.android.hasProperty("namespace")) {
+        namespace('com.shady_tech.google_places')
+    }
+
     compileSdkVersion 31
 
     compileOptions {
