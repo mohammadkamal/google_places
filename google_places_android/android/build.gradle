@@ -1,5 +1,5 @@
-group 'com.google_places_android'
-version '1.0-SNAPSHOT'
+group = 'com.google_places_android'
+version = '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.7.10'
@@ -26,18 +26,18 @@ apply plugin: 'kotlin-android'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace('com.shady_tech.google_places')
+        namespace("com.google_places_android")
     }
 
     compileSdkVersion 31
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {
@@ -46,10 +46,11 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdk = 16
     }
 
     dependencies {
+        implementation 'com.google.android.libraries.places:places:3.0.0'
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
     }
@@ -65,8 +66,4 @@ android {
             }
         }
     }
-}
-
-dependencies {
-    implementation 'com.google.android.libraries.places:places:3.0.0'
 }

@@ -1,3 +1,6 @@
+## 1.2.1
+* Fixed Gradle issues.
+
 ## 1.2.0
 * Minimum support in iOS is now 12.0.
 
