@@ -1,6 +1,6 @@
 name: google_places_android
 description: A flutter plugin to use google places SDK on Android
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/mohammadkamal/google_places
 
 environment:
